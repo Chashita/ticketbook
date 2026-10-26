@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#10100f" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="stylesheet" href="./css/base.css" />
+    <link rel="stylesheet" href="./css/site.css" />
+    <link rel="stylesheet" href="./css/auth.css" />
+    <title>SeatLock — Your Account</title>
+  </head>
+  <body>
+    <main class="auth-page auth-login" id="auth-page">
+      <header class="auth-topbar">
+        <a class="auth-brand" href="./index.html" aria-label="SeatLock home">
+          <span class="auth-brand-mark" aria-hidden="true">S</span>
+          <span>Seat<span>Lock</span><i>.</i></span>
+        </a>
+        <a class="back-home" href="./index.html"><span aria-hidden="true">&#8592;</span> Back to home</a>
+      </header>
+
+      <div class="auth-layout">
+        <aside class="auth-editorial" aria-label="SeatLock event experiences">
+          <div class="auth-editorial-content">
+            <span class="auth-kicker">A PASS TO THE UNEXPECTED</span>
+            <p class="auth-editorial-title">The best stories<br />happen <em>out there.</em></p>
+            <p class="auth-editorial-caption">Find your people. Find your night. Make it one to remember.</p>
+          </div>
+          <span class="auth-editorial-index">SEATLOCK&nbsp;&nbsp; / &nbsp;&nbsp;EST. FOR THE MOMENT</span>
+        </aside>
+
+        <section class="auth-panel" aria-labelledby="auth-title">
+          <div class="auth-form-wrap">
+            <span class="section-label" id="auth-kicker">GOOD TO HAVE YOU BACK</span>
+            <h1 id="auth-title">Welcome <em>back.</em></h1>
+            <p class="auth-intro" id="auth-intro">Sign in to pick up where your next night out begins.</p>
+
+            <form class="auth-form" id="auth-form" novalidate>
+              <div class="auth-field" data-signup-only hidden>
+                <label for="fullName">Full name</label>
+                <input id="fullName" name="fullName" type="text" placeholder="Your name" autocomplete="name" />
+                <p class="field-error" data-error-for="fullName" hidden></p>
+              </div>
+
+              <div class="auth-field">
+                <label for="email">Email address</label>
+                <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" />
+                <p class="field-error" data-error-for="email" hidden></p>
+              </div>
+
+              <div class="auth-field">
+                <label for="password">Password</label>
+                <div class="password-control">
+                  <input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" />
+                  <button class="password-toggle" type="button" data-password-toggle="password" aria-label="Show password" aria-pressed="false">&#9673;</button>
+                </div>
+                <p class="field-error" data-error-for="password" hidden></p>
+              </div>
+
+              <div class="auth-field" data-signup-only hidden>
+                <label for="confirmPassword">Confirm password</label>
+                <div class="password-control">
+                  <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Re-enter your password" autocomplete="new-password" />
+                  <button class="password-toggle" type="button" data-password-toggle="confirmPassword" aria-label="Show confirm password" aria-pressed="false">&#9673;</button>
+                </div>
+                <p class="field-error" data-error-for="confirmPassword" hidden></p>
+              </div>
+
+              <div class="auth-options" id="login-options">
+                <label class="check-label"><input type="checkbox" name="remember" /><span>Remember me</span></label>
+                <a class="auth-inline-link" href="#forgot-password" id="forgot-password">Forgot password?</a>
+              </div>
+
+              <div class="terms-area" data-signup-only hidden>
+                <label class="check-label">
+                  <input id="terms" name="terms" type="checkbox" />
+                  <span>I agree to the Terms and Conditions</span>
+                </label>
+                <p class="field-error" data-error-for="terms" hidden></p>
+              </div>
+
+              <button class="auth-submit" id="auth-submit" type="submit">Sign in <span aria-hidden="true">&#8594;</span></button>
+              <p class="auth-notice" id="auth-notice" role="status" aria-live="polite"></p>
+            </form>
+
+            <p class="auth-switch" id="auth-switch">New to SeatLock? <a href="./auth.html?mode=signup">Create an account</a></p>
+            <p class="auth-disclaimer">Frontend preview only. No credentials are sent or saved.</p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="./js/auth.js" defer></script>
+  </body>
+</html>

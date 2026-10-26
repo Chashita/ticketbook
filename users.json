@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1793007283995,
+    "fullName": "Test Put",
+    "email": "test@example.com",
+    "password": "password123",
+    "createdAt": "2026-10-26T09:34:43.995Z",
+    "updatedAt": "2026-10-26T09:36:32.793Z"
+  },
+  {
+    "id": 1793007483054,
+    "fullName": "chashita",
+    "email": "dawarchashita@gmail.com",
+    "password": "Dawar@456789",
+    "createdAt": "2026-10-26T09:38:03.054Z",
+    "updatedAt": "2026-10-26T09:38:03.054Z"
+  },
+  {
+    "id": 1793012131713,
+    "fullName": "sambal",
+    "email": "sambal1508.becse@chitkara.edu.in",
+    "password": "sambal@123",
+    "createdAt": "2026-10-26T10:55:31.714Z",
+    "updatedAt": "2026-10-26T10:55:31.714Z"
+  }
+]

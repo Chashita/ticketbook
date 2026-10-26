@@ -1,3 +1,4 @@
+/* Shared fonts and styles for the event discovery page. */
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap');
 
 :root {
@@ -18,6 +19,7 @@
   background: #10100f;
 }
 
+/* Header navigation and SeatLock wordmark. */
 .navbar {
   min-height: 88px;
   padding: 0 clamp(24px, 6.25vw, 120px);
@@ -95,6 +97,140 @@
   gap: 10px;
 }
 
+.profile-dropdown {
+  position: relative;
+}
+
+.profile-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 50px;
+  padding: 6px 16px 6px 6px;
+  background: transparent;
+  border: 1px solid #48453f;
+  color: #f4f1ec;
+  transition: border-color 160ms ease;
+  cursor: pointer;
+}
+
+.profile-trigger:hover {
+  border-color: #c7a477;
+}
+
+.profile-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #d5b38b 0%, #c7a477 100%);
+  color: #161513;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.profile-avatar.large {
+  width: 48px;
+  height: 48px;
+  font-size: 16px;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.profile-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #f4f1ec;
+}
+
+.profile-id {
+  font-size: 11px;
+  color: #aaa59c;
+}
+
+.profile-caret {
+  color: #aaa59c;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.profile-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 280px;
+  background: #191816;
+  border: 1px solid #49443d;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  display: none;
+  z-index: 100;
+}
+
+.profile-menu.show {
+  display: block;
+}
+
+.profile-menu-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+}
+
+.profile-menu-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #f4f1ec;
+  margin-bottom: 4px;
+}
+
+.profile-menu-email {
+  font-size: 12px;
+  color: #c2bdb5;
+  margin-bottom: 4px;
+}
+
+.profile-menu-id {
+  font-size: 11px;
+  color: #aaa59c;
+}
+
+.profile-menu-divider {
+  height: 1px;
+  background: #3b3832;
+}
+
+.profile-menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  color: #e3ddd4;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.profile-menu-item:hover {
+  background: #252321;
+  color: #e3c39b;
+}
+
+.logout-btn {
+  color: #d9c39f;
+}
+
 .nav-signup {
   min-height: 46px;
   display: inline-flex;
@@ -132,9 +268,11 @@
 .nav-button:hover,
 .hero-button:hover {
   border-color: #d4b38b;
-  background: #d4b38b;
+  background: linear-gradient(135deg, #e8e1d7 0%, #d4b38b 100%);
+  box-shadow: 0 8px 24px rgba(212, 179, 139, 0.2);
 }
 
+/* Full-width event discovery hero. */
 .hero {
   min-height: min(690px, calc(100svh - 88px));
   min-height: clamp(550px, 42vw, 700px);
@@ -211,14 +349,59 @@
   padding: 0 24px;
 }
 
-.hero-note {
+.hero-cta-group {
   display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.hero-button-secondary {
+  min-height: 54px;
+  display: inline-flex;
   align-items: center;
-  gap: 15px;
-  margin-top: 66px;
-  font-size: 10px;
+  justify-content: center;
+  gap: 13px;
+  padding: 0 24px;
+  border: 1px solid #d5b38b;
+  background: transparent;
+  color: #e3c39b;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.hero-button-secondary:hover {
+  background: rgba(213, 179, 139, 0.1);
+  border-color: #e3c39b;
+  color: #f4f1ec;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 66px;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-number {
+  font-size: 28px;
+  font-weight: 600;
+  color: #e3c39b;
+  font-family: 'Playfair Display', serif;
+}
+
+.stat-label {
+  font-size: 11px;
   letter-spacing: 1.8px;
-  color: #c6c0b7;
+  color: #aaa59c;
+  text-transform: uppercase;
 }
 
 .hero-line {
@@ -237,6 +420,7 @@
   color: #e0d8cd;
 }
 
+/* Search, category controls, and event cards. */
 .events-section {
   padding: 112px clamp(24px, 6.25vw, 120px) 108px;
 }
@@ -342,8 +526,15 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  background: #171614;
+  background: linear-gradient(180deg, #1a1917 0%, #171614 100%);
   border: 1px solid #ffffff12;
+  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.event-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(213, 179, 139, 0.4);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
 .event-image-wrap {
@@ -442,15 +633,19 @@
   color: #f2ede5;
 }
 
-.event-details-button,
+.event-actions {
+  display: flex;
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.event-action-button,
 .text-button {
   min-height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
   gap: 11px;
-  margin-top: 14px;
   padding: 0 14px;
   border: 1px solid #514a3f;
   background: transparent;
@@ -460,18 +655,30 @@
   transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
 }
 
-.event-details-button:hover {
+.event-action-button {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+}
+
+.book-now-button {
   border-color: #e8e1d7;
   background: #e8e1d7;
   color: #161513;
 }
 
-.event-details-button svg,
+.event-action-button:hover {
+  border-color: #e8e1d7;
+  background: #e8e1d7;
+  color: #161513;
+}
+
+.event-action-button span,
 .text-button svg {
   transition: transform 160ms ease;
 }
 
-.event-details-button:hover svg {
+.event-action-button:hover span {
   transform: translateX(4px);
 }
 
@@ -500,7 +707,7 @@
 .experience-section {
   text-align: center;
   padding: 94px 24px 100px;
-  background: #191816;
+  background: radial-gradient(ellipse at center, #1f1d1a 0%, #191816 70%);
 }
 
 .experience-icon {
@@ -625,6 +832,7 @@
   line-height: 1.6;
 }
 
+/* Accessible event details overlay. */
 .dialog-backdrop {
   position: fixed;
   z-index: 5;
@@ -700,6 +908,109 @@
 .info-dialog .dialog-note {
   color: #aaa69f;
   font-size: 12px;
+}
+
+.booking-intro {
+  margin-bottom: 26px;
+}
+
+.booking-ticket-row,
+.booking-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.booking-ticket-row {
+  padding: 18px 0;
+  border-block: 1px solid #3b3832;
+}
+
+.booking-ticket-row > div:first-child {
+  display: grid;
+  gap: 6px;
+}
+
+.ticket-name {
+  color: #f4f1ec;
+  font-size: 14px;
+}
+
+.ticket-unit-price {
+  color: #aaa69f;
+  font-size: 12px;
+}
+
+.ticket-stepper {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ticket-stepper button {
+  width: 38px;
+  height: 38px;
+  border: 1px solid #514a3f;
+  background: transparent;
+  color: #f4f1ec;
+  font-size: 19px;
+}
+
+.ticket-stepper button:hover {
+  border-color: #d5b38b;
+  color: #d5b38b;
+}
+
+.ticket-stepper output {
+  min-width: 20px;
+  color: #f4f1ec;
+  text-align: center;
+}
+
+.booking-total {
+  padding: 20px 0;
+  color: #c2bdb5;
+  font-size: 14px;
+}
+
+.booking-total strong {
+  color: #f4f1ec;
+  font-size: 18px;
+}
+
+.booking-continue {
+  min-height: 52px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  border: 1px solid #e8e1d7;
+  background: #e8e1d7;
+  color: #161513;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.booking-continue:hover:not(:disabled) {
+  border-color: #d4b38b;
+  background: #d4b38b;
+}
+
+.booking-continue:disabled {
+  cursor: not-allowed;
+  opacity: .7;
+}
+
+.booking-feedback {
+  color: #d9c39f;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.booking-feedback:empty {
+  display: none;
 }
 
 @media (min-width: 1600px) {
@@ -878,9 +1189,24 @@
     font-size: 14px;
   }
 
-  .hero-note {
-    margin-top: 54px;
-    font-size: 9px;
+  .hero-cta-group {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .hero-button,
+  .hero-button-secondary {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .hero-stats {
+    gap: 24px;
+    margin-bottom: 54px;
+  }
+
+  .stat-number {
+    font-size: 24px;
   }
 
   .events-section {

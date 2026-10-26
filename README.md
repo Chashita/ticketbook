@@ -1,16 +1,17 @@
-# React + Vite
+# SeatLock
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+SeatLock is a static site built with plain HTML, CSS, and browser JavaScript. It does not need React, Vite, npm, or a build step.
 
-Currently, two official plugins are available:
+## Run locally
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Open `index.html` in a browser, or use the VS Code Live Server extension. The authentication preview is available at `auth.html?mode=login` and `auth.html?mode=signup`.
 
-## React Compiler
+## Project structure
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- `index.html` contains the event discovery page.
+- `auth.html` contains the sign-in and sign-up page layouts.
+- `css/` contains the base, site, and authentication styles.
+- `js/` contains event interactions and authentication form behavior.
+- `favicon.svg` is the site icon.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Authentication and ticket booking are front-end previews only; no credentials or bookings are saved.

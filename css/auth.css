@@ -1,3 +1,4 @@
+/* Sign-in and sign-up page layout and controls. */
 .auth-page {
   min-height: 100vh;
   background: #10100f;
@@ -57,6 +58,7 @@
   color: #e3c39b;
 }
 
+/* Editorial image panel beside the account form. */
 .auth-layout {
   min-height: calc(100vh - 82px);
   display: grid;
@@ -128,6 +130,7 @@
   padding: clamp(42px, 6vw, 88px) clamp(28px, 7vw, 110px);
 }
 
+/* Form fields, inline validation, and submit state. */
 .auth-form-wrap {
   width: min(100%, 470px);
 }
