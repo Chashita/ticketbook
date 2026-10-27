@@ -192,7 +192,7 @@ if (grid) {
     document.querySelector("#booking-feedback").textContent = "";
     const continueButton = document.querySelector("#booking-continue");
     continueButton.disabled = false;
-    continueButton.innerHTML = 'Continue to checkout <span aria-hidden="true">&#8594;</span>';
+    continueButton.innerHTML = 'Choose Seats <span aria-hidden="true">&#8594;</span>';
     updateBookingSummary();
     bookingDialog.hidden = false;
     bookingDialog.classList.add("is-open");
@@ -260,13 +260,14 @@ if (grid) {
     ticketQuantity = Math.min(8, ticketQuantity + 1);
     updateBookingSummary();
   });
-  document.querySelector("#booking-continue").addEventListener("click", (event) => {
-    const subtotal = document.querySelector("#booking-subtotal").textContent;
-    const ticketLabel = ticketQuantity === 1 ? "ticket" : "tickets";
-    document.querySelector("#booking-feedback").textContent = `Selection ready: ${ticketQuantity} ${ticketLabel} for ${activeBookingEvent.title}, ${subtotal}. Checkout and reservation are not connected, so no tickets have been booked.`;
-    event.currentTarget.disabled = true;
-    event.currentTarget.textContent = "Checkout unavailable";
-  });
+  document.querySelector("#booking-continue").addEventListener("click", () => {
+  const slug = activeBookingEvent.title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+  window.location.href =
+    `./seats.html?event=${slug}&qty=${ticketQuantity}&title=${encodeURIComponent(activeBookingEvent.title)}`;
+});
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;
     if (!detailsDialog.hidden) closeDetailsDialog();

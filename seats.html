@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#10100f" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="stylesheet" href="./css/base.css" />
+    <link rel="stylesheet" href="./css/seats.css" />
+    <title>SeatLock — Pick your seats</title>
+  </head>
+  <body>
+    <main class="seat-page">
+      <header class="seat-topbar">
+        <a href="./index.html">&#8592; Back to home</a>
+        <span class="who">You are <strong id="who"></strong></span>
+      </header>
+
+      <div class="seat-layout">
+        <section class="seat-main">
+          <h1>Pick your <em>seats.</em></h1>
+          <p class="hint">Click a seat to hold it for 60 seconds. Open this page in a second tab to see another user.</p>
+
+          <div class="stage">STAGE</div>
+          <div class="seat-grid" id="seat-grid"></div>
+
+          <div class="legend">
+            <span><i class="dot available"></i> Available</span>
+            <span><i class="dot mine"></i> Held by you</span>
+            <span><i class="dot held"></i> Held by someone else</span>
+            <span><i class="dot booked"></i> Booked</span>
+          </div>
+        </section>
+
+        <aside class="seat-side">
+          <div class="card">
+            <h2>Your holds</h2>
+            <ul id="my-holds" class="my-holds"></ul>
+            <p id="timer" class="timer"></p>
+            <button class="btn primary" id="confirm-btn" type="button">Confirm &amp; pay (mock)</button>
+            <p id="booking-msg" class="msg" role="status"></p>
+          </div>
+
+          <div class="card">
+            <h2>Race condition demo</h2>
+            <p class="small">20 users hit the same seat at the same instant.</p>
+            <div class="btn-row">
+              <button class="btn danger" id="race-unsafe" type="button">Unsafe version</button>
+              <button class="btn ok" id="race-safe" type="button">Safe version</button>
+            </div>
+            <p id="race-result" class="race-result"></p>
+            <button class="btn ghost" id="reset-btn" type="button">Reset event</button>
+          </div>
+
+          <div class="card">
+            <h2>Live server activity <span class="live">&#9679; LIVE</span></h2>
+            <ul id="log" class="log"></ul>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <script src="./js/seats.js" defer></script>
+  </body>
+</html>
