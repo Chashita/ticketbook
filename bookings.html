@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#10100f" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="stylesheet" href="./css/base.css" />
+    <link rel="stylesheet" href="./css/site.css" />
+    <link rel="stylesheet" href="./css/bookings.css" />
+    <title>SeatLock — My Bookings</title>
+  </head>
+  <body>
+    <main class="bookings-page">
+      <header class="bookings-topbar">
+        <a href="./index.html">&#8592; Back to events</a>
+        <span>Signed in as <strong id="account-name"></strong></span>
+      </header>
+
+      <section aria-labelledby="bookings-title">
+        <span class="section-label">YOUR SEATLOCK ACCOUNT</span>
+        <h1 id="bookings-title">My <em>bookings.</em></h1>
+        <p class="bookings-intro">Your confirmed tickets, all in one place.</p>
+
+        <p id="bookings-status" class="bookings-status" role="status" aria-live="polite">Loading your bookings…</p>
+        <div id="bookings-list" class="bookings-list"></div>
+        <div id="bookings-empty" class="bookings-empty" hidden>
+          <h2>No bookings yet</h2>
+          <p>When you book seats, your confirmed tickets will show up here.</p>
+          <a class="browse-events" href="./index.html#events">Browse events <span aria-hidden="true">&#8594;</span></a>
+        </div>
+      </section>
+    </main>
+
+    <script src="./js/bookings.js" defer></script>
+  </body>
+</html>

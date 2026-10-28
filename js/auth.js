@@ -1,10 +1,28 @@
 // The same form supports both modes; the query string selects which fields appear.
 const params = new URLSearchParams(window.location.search);
 const isSignup = params.get("mode") === "signup";
+const requestedReturnTo = params.get("returnTo");
 const authPage = document.querySelector("#auth-page");
 const authForm = document.querySelector("#auth-form");
 
 if (authPage && authForm) {
+  function authUrl(mode) {
+    const url = new URL("./auth.html", window.location.href);
+    url.searchParams.set("mode", mode);
+    if (requestedReturnTo) url.searchParams.set("returnTo", requestedReturnTo);
+    return url.href;
+  }
+
+  function getReturnDestination() {
+    if (!requestedReturnTo) return "./index.html";
+    try {
+      const destination = new URL(requestedReturnTo, window.location.href);
+      return destination.origin === window.location.origin ? destination.href : "./index.html";
+    } catch {
+      return "./index.html";
+    }
+  }
+
   const title = document.querySelector("#auth-title");
   const intro = document.querySelector("#auth-intro");
   const kicker = document.querySelector("#auth-kicker");
@@ -28,12 +46,12 @@ if (authPage && authForm) {
     document.querySelector("#password").placeholder = "At least 8 characters";
     document.querySelector("#password").autocomplete = "new-password";
     submitButton.innerHTML = 'Create account <span aria-hidden="true">&#8594;</span>';
-    switchText.innerHTML = 'Already have an account? <a href="./auth.html?mode=login">Sign in</a>';
+    switchText.innerHTML = `Already have an account? <a href="${authUrl("login")}">Sign in</a>`;
     document.title = "SeatLock — Create an Account";
   } else {
     title.innerHTML = "Welcome <em>back.</em>";
     submitButton.innerHTML = 'Sign in <span aria-hidden="true">&#8594;</span>';
-    switchText.innerHTML = 'New to SeatLock? <a href="./auth.html?mode=signup">Create an account</a>';
+    switchText.innerHTML = `New to SeatLock? <a href="${authUrl("signup")}">Create an account</a>`;
     document.title = "SeatLock — Sign In";
   }
 
@@ -168,9 +186,9 @@ if (authPage && authForm) {
       // Optionally redirect after success
       setTimeout(() => {
         if (isSignup) {
-          window.location.href = "./auth.html?mode=login";
+          window.location.href = authUrl("login");
         } else {
-          window.location.href = "./index.html";
+          window.location.href = getReturnDestination();
         }
       }, 1000);
     } catch (error) {

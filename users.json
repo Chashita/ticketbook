@@ -22,5 +22,21 @@
     "password": "sambal@123",
     "createdAt": "2026-10-26T10:55:31.714Z",
     "updatedAt": "2026-10-26T10:55:31.714Z"
+  },
+  {
+    "id": 1793113448868,
+    "fullName": "sambal",
+    "email": "sambal1508.becse24@chitkara.edu.in",
+    "password": "sambal@123",
+    "createdAt": "2026-10-27T15:04:08.868Z",
+    "updatedAt": "2026-10-27T15:04:08.868Z"
+  },
+  {
+    "id": 1793130606443,
+    "fullName": "sambal poonia",
+    "email": "sambalpoonia0@gmail.com",
+    "password": "sambal@123",
+    "createdAt": "2026-10-27T19:50:06.443Z",
+    "updatedAt": "2026-10-27T19:50:06.443Z"
   }
 ]

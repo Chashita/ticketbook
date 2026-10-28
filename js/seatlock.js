@@ -112,6 +112,29 @@ if (grid) {
   let activeBookingEvent = null;
   let ticketQuantity = 1;
 
+  function getSignedInUser() {
+    try {
+      const user = JSON.parse(localStorage.getItem("seatlockUser"));
+      return user && user.id ? user : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function eventSlug(event) {
+    return event.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+  }
+
+  function redirectToSignIn(returnTo) {
+    const signInUrl = new URL("./auth.html", window.location.href);
+    signInUrl.searchParams.set("mode", "login");
+    signInUrl.searchParams.set("returnTo", returnTo);
+    window.location.href = signInUrl.href;
+  }
+
   // Render cards from the event list, keeping their content in one data source.
   function renderEvents() {
     const query = searchInput.value.trim().toLowerCase();
@@ -240,6 +263,10 @@ if (grid) {
     if (trigger.dataset.eventAction === "details") {
       showEventDetails(selectedEvent, trigger);
     } else {
+      if (!getSignedInUser()) {
+        redirectToSignIn(`./index.html?book=${encodeURIComponent(eventSlug(selectedEvent))}`);
+        return;
+      }
       showBooking(selectedEvent, trigger);
     }
   });
@@ -261,13 +288,23 @@ if (grid) {
     updateBookingSummary();
   });
   document.querySelector("#booking-continue").addEventListener("click", () => {
-  const slug = activeBookingEvent.title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-  window.location.href =
-    `./seats.html?event=${slug}&qty=${ticketQuantity}&title=${encodeURIComponent(activeBookingEvent.title)}`;
-});
+    const slug = eventSlug(activeBookingEvent);
+    window.location.href =
+      `./seats.html?event=${slug}&qty=${ticketQuantity}&title=${encodeURIComponent(activeBookingEvent.title)}`;
+  });
+
+  const pendingBookingSlug = new URLSearchParams(window.location.search).get("book");
+  if (pendingBookingSlug) {
+    const pendingEvent = events.find((event) => eventSlug(event) === pendingBookingSlug);
+    if (pendingEvent) {
+      if (getSignedInUser()) {
+        showBooking(pendingEvent, null);
+      } else {
+        redirectToSignIn(`./index.html?book=${encodeURIComponent(pendingBookingSlug)}`);
+      }
+    }
+  }
+
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;
     if (!detailsDialog.hidden) closeDetailsDialog();
