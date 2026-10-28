@@ -46,7 +46,7 @@ function renderProfile() {
             </div>
           </div>
           <div class="profile-menu-divider"></div>
-          <a href="#bookings" class="profile-menu-item" role="menuitem">My Bookings</a>
+          <a href="./bookings.html" class="profile-menu-item" role="menuitem">My Bookings</a>
           <button class="profile-menu-item logout-btn" id="logout-btn" role="menuitem">Logout</button>
         </div>
       </div>

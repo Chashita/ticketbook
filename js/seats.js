@@ -1,5 +1,30 @@
 (() => {
   const params = new URLSearchParams(location.search);
+
+  function getSignedInUser() {
+    try {
+      const user = JSON.parse(localStorage.getItem("seatlockUser"));
+      return user && user.id ? user : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function hasSignedInUser() {
+    return Boolean(getSignedInUser());
+  }
+
+  function requireSignedIn() {
+    if (hasSignedInUser()) return true;
+    const signInUrl = new URL("./auth.html", window.location.href);
+    signInUrl.searchParams.set("mode", "login");
+    signInUrl.searchParams.set("returnTo", `${location.pathname}${location.search}`);
+    window.location.replace(signInUrl.href);
+    return false;
+  }
+
+  if (!requireSignedIn()) return;
+
   const eventId = params.get("event") || "demo";
 
   // Each browser tab = one "user". (Later you can replace this with the logged-in user.)
@@ -28,6 +53,9 @@
   let clockOffset = 0; // serverTime - clientTime, so countdowns are accurate
 
   async function post(path, body = {}) {
+    if (!requireSignedIn()) {
+      return { ok: false, status: 401, data: { error: "Sign in to continue." } };
+    }
     const res = await fetch(api + path, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -130,13 +158,23 @@
 
   $("confirm-btn").addEventListener("click", async () => {
     const msg = $("booking-msg");
-    const r = await post("/book");
+    const user = getSignedInUser();
+    if (!user) {
+      requireSignedIn();
+      return;
+    }
+    const r = await post("/book", {
+      accountId: Number(user.id),
+      eventTitle: params.get("title") || eventId,
+    });
     if (r.ok) {
       msg.textContent = `Booked: ${r.data.seats.join(", ")} (mock payment)`;
       msg.className = "msg success";
+      $("view-bookings").hidden = false;
     } else {
       msg.textContent = r.data.error || "Booking failed.";
       msg.className = "msg error";
+      $("view-bookings").hidden = true;
     }
   });
 

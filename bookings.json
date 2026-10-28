@@ -1,0 +1,13 @@
+[
+  {
+    "id": "1793130606443-1793131860556",
+    "accountId": 1793130606443,
+    "eventId": "the-sound-of-tomorrow",
+    "eventTitle": "The Sound of Tomorrow",
+    "seats": [
+      "D8"
+    ],
+    "bookedAt": "2026-10-27T20:11:00.556Z",
+    "status": "Confirmed"
+  }
+]

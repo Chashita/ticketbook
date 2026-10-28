@@ -11,6 +11,7 @@ app.use(express.json());
 app.use(express.static(__dirname));
 
 const USERS_FILE = path.join(__dirname, "users.json");
+const BOOKINGS_FILE = path.join(__dirname, "bookings.json");
 
 function readUsers() {
   try {
@@ -24,6 +25,22 @@ function readUsers() {
 
 function writeUsers(users) {
   fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+}
+
+function readBookings() {
+  try {
+    const data = fs.readFileSync(BOOKINGS_FILE, "utf-8");
+    const bookings = data.trim() ? JSON.parse(data) : [];
+    if (!Array.isArray(bookings)) throw new Error("Bookings data must be an array.");
+    return bookings;
+  } catch (err) {
+    if (err.code === "ENOENT") return [];
+    throw err;
+  }
+}
+
+function writeBookings(bookings) {
+  fs.writeFileSync(BOOKINGS_FILE, JSON.stringify(bookings, null, 2));
 }
 
 app.post("/api/signup", (req, res) => {
@@ -174,6 +191,23 @@ app.get("/api/users/:id", (req, res) => {
   res.json({ success: true, user: safeUser });
 });
 
+app.get("/api/users/:id/bookings", (req, res) => {
+  const accountId = Number(req.params.id);
+  if (!Number.isSafeInteger(accountId) || accountId <= 0) {
+    return res.status(400).json({ success: false, error: "Invalid user ID." });
+  }
+
+  try {
+    const bookings = readBookings()
+      .filter((booking) => booking.accountId === accountId)
+      .sort((a, b) => Date.parse(b.bookedAt) - Date.parse(a.bookedAt));
+    res.json({ success: true, bookings });
+  } catch (err) {
+    console.error("Could not read bookings:", err);
+    res.status(500).json({ success: false, error: "Could not load your bookings." });
+  }
+});
+
 // =====================================================================
 //  SEAT MAP + TEMPORARY HOLDS  (in-memory for now, resets on restart)
 // =====================================================================
@@ -312,7 +346,12 @@ app.post("/api/events/:eventId/seats/:seatId/release", (req, res) => {
 // Mock payment: turns this user's still-valid holds into bookings.
 app.post("/api/events/:eventId/book", (req, res) => {
   const { eventId } = req.params;
-  const { userId } = req.body;
+  const { userId, eventTitle } = req.body;
+  const accountId = Number(req.body.accountId);
+  if (!Number.isSafeInteger(accountId) || accountId <= 0) {
+    return res.status(400).json({ success: false, error: "A valid account ID is required." });
+  }
+
   const seats = getSeats(eventId);
   const now = Date.now();
 
@@ -325,6 +364,24 @@ app.post("/api/events/:eventId/book", (req, res) => {
     return res.status(409).json({ success: false, error: "Your hold expired. Please pick seats again." });
   }
 
+  const booking = {
+    id: `${accountId}-${now}`,
+    accountId,
+    eventId,
+    eventTitle: typeof eventTitle === "string" && eventTitle.trim() ? eventTitle.trim().slice(0, 200) : eventId,
+    seats: mine,
+    bookedAt: new Date(now).toISOString(),
+    status: "Confirmed",
+  };
+  try {
+    const bookings = readBookings();
+    bookings.push(booking);
+    writeBookings(bookings);
+  } catch (err) {
+    console.error("Could not save booking:", err);
+    return res.status(500).json({ success: false, error: "Could not save your booking. Please try again." });
+  }
+
   for (const id of mine) {
     seats[id].status = "booked";
     seats[id].bookedBy = userId;
@@ -333,7 +390,7 @@ app.post("/api/events/:eventId/book", (req, res) => {
     pushSeat(eventId, id);
   }
   logEvent(eventId, `${userId} BOOKED ${mine.join(", ")}`, "ok");
-  res.json({ success: true, seats: mine });
+  res.json({ success: true, seats: mine, booking });
 });
 
 // Demo: N simulated users hit ONE seat at the same instant.
@@ -369,6 +426,14 @@ app.post("/api/events/:eventId/race", async (req, res) => {
 
 app.post("/api/events/:eventId/reset", (req, res) => {
   const { eventId } = req.params;
+  try {
+    const bookings = readBookings().filter((booking) => booking.eventId !== eventId);
+    writeBookings(bookings);
+  } catch (err) {
+    console.error("Could not reset event bookings:", err);
+    return res.status(500).json({ success: false, error: "Could not reset event bookings." });
+  }
+
   delete seatStore[eventId];
   getSeats(eventId);
   broadcast(eventId, "reset", {});
