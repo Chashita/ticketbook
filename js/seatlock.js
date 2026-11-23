@@ -101,6 +101,10 @@ const events = [
 const grid = document.querySelector("#event-grid");
 
 if (grid) {
+  const results = document.querySelector("#event-results");
+  document.querySelector("#catalog-events").textContent = events.length;
+  document.querySelector("#catalog-cities").textContent = new Set(events.map((event) => event.location)).size;
+  document.querySelector("#catalog-categories").textContent = new Set(events.map((event) => event.category)).size;
   const searchInput = document.querySelector("#event-search");
   const categoryButtons = [...document.querySelectorAll("[data-category]")];
   const emptyState = document.querySelector("#empty-state");
@@ -172,7 +176,10 @@ if (grid) {
       </article>
     `).join("");
 
-    emptyState.hidden = filteredEvents.length > 0;
+    const count = filteredEvents.length;
+    const summary = `Showing ${count} of ${events.length} events`;
+    if (results.textContent !== summary) results.textContent = summary;
+    emptyState.hidden = count > 0;
   }
 
   function showEventDetails(event, trigger) {

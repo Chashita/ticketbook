@@ -1,0 +1,94 @@
+.website {
+  --discover-accent: #f2c68d;
+}
+
+.website .hero {
+  isolation: isolate;
+  margin-inline: clamp(10px, 2vw, 36px);
+  overflow: hidden;
+  border: 1px solid #f2c68d30;
+  border-radius: clamp(20px, 3vw, 44px);
+  background: radial-gradient(ellipse at 15% 85%, #3b271e, #141211 60%);
+}
+
+.website .hero-image {
+  z-index: -1;
+  background:
+    linear-gradient(90deg, #151211 0%, #151211d9 26%, #15121122 85%),
+    linear-gradient(0deg, #151211ba, transparent 65%),
+    url('https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=2200&q=85') center / cover;
+}
+
+.website .hero-content {
+  animation: discover-enter 420ms ease-out both;
+}
+
+.website .hero h1 span {
+  color: var(--discover-accent);
+}
+
+.website .hero-button,
+.website .hero-button-secondary,
+.website .category-button,
+.website .event-tag {
+  border-radius: 999px;
+}
+
+.website .event-toolbar {
+  flex-wrap: wrap;
+  padding: 12px;
+  gap: 14px;
+  margin-bottom: 14px;
+  border: 1px solid #ffffff18;
+  border-radius: 20px;
+  background: #ffffff06;
+}
+
+.website .search-box {
+  max-width: 100%;
+  border-radius: 12px;
+}
+
+.event-results {
+  color: #cac1b6;
+  font-size: .875rem;
+  margin: 0 0 18px;
+}
+
+.website .event-card {
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.website .event-card:focus-within {
+  border-color: var(--discover-accent);
+}
+
+.website .event-action-button {
+  border-radius: 10px;
+}
+
+.website :is(a, button):focus-visible {
+  outline: 2px solid var(--discover-accent);
+  outline-offset: 3px;
+}
+
+@keyframes discover-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 680px) {
+  .website .hero-image {
+    inset: 0;
+    background:
+      linear-gradient(0deg, #151211 5%, #151211de 62%, #15121155),
+      url('https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=1000&q=80') center / cover;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .website .hero-content {
+    animation: none;
+  }
+}

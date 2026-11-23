@@ -1,0 +1,156 @@
+.react-event-dialog,
+.react-auth-panel {
+  width: min(540px, calc(100% - 32px));
+  padding: clamp(24px, 5vw, 44px);
+  border: 1px solid #f2c68d40;
+  border-radius: 24px;
+  background: #1a1715;
+  color: #f4f1ec;
+}
+
+.react-event-dialog {
+  margin: auto;
+}
+
+.react-event-dialog::backdrop {
+  background: #080706cc;
+}
+
+.react-auth-panel {
+  margin: clamp(24px, 8vh, 90px) auto;
+}
+
+.react-auth-form,
+.react-auth-form label {
+  display: grid;
+  gap: 10px;
+}
+
+.react-auth-form {
+  gap: 18px;
+  margin: 24px 0;
+}
+
+.react-auth-form input:not([type="checkbox"]) {
+  width: 100%;
+  border: 1px solid #ffffff40;
+  border-radius: 10px;
+  padding: 12px;
+  color: inherit;
+  background: #10100f;
+}
+
+.react-auth-form .react-auth-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.seat-page .seat-row {
+  gap: clamp(3px, 1vw, 8px);
+}
+
+.seat-page .seat {
+  width: clamp(20px, 6vw, 44px);
+}
+
+.discover-edition {
+  --discover-accent: #f0b77d;
+}
+
+.discover-edition .hero {
+  border-radius: 0;
+  padding: clamp(35px, 6vw, 100px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 280px);
+  align-items: end;
+  gap: 32px;
+}
+
+.discover-edition .hero-content {
+  width: 100%;
+}
+
+.discover-edition .hero h1 {
+  font-size: clamp(52px, 8vw, 126px);
+}
+
+.discover-edition .hero-stats {
+  margin-bottom: 0;
+}
+
+.featured-ticket {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  padding: 20px 42px 20px 20px;
+  background: #f0dfc8;
+  color: #221a15;
+  border-left: 4px solid #e19956;
+  transition: transform 180ms ease, background 180ms ease;
+}
+
+.featured-ticket:hover {
+  transform: translateY(-4px);
+  background: #fff0da;
+}
+
+.featured-ticket strong {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.4rem;
+}
+
+.featured-label {
+  font-size: .7rem;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
+
+.featured-arrow {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+}
+
+.discover-edition :is(.event-card, .event-toolbar, .event-action-button, .search-box) {
+  border-radius: 4px;
+}
+
+.discover-edition .event-toolbar {
+  background: transparent;
+  border-width: 1px 0;
+  padding-inline: 0;
+}
+
+.edition-venue {
+  color: #c8b9aa;
+  font-size: .85rem;
+  margin: 0 0 12px;
+}
+
+@media (max-width: 800px) {
+  .discover-edition .hero {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .featured-ticket {
+    width: min(100%, 360px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .featured-ticket,
+  .react-event-dialog[open],
+  .react-auth-panel {
+    animation: discover-enter 320ms ease-out both;
+  }
+
+  .event-grid .event-card {
+    animation: catalog-enter 240ms ease-out;
+  }
+
+  @keyframes catalog-enter {
+    from { opacity: .55; translate: 0 8px; }
+    to { opacity: 1; translate: 0 0; }
+  }
+}

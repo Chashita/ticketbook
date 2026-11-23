@@ -8,7 +8,16 @@ const PORT = 5000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(__dirname));
+const frontendDir = path.join(__dirname, "dist");
+app.use("/react/assets", express.static(path.join(frontendDir, "assets")));
+app.get("/favicon.svg", (req, res) => res.sendFile(path.join(__dirname, "favicon.svg")));
+app.get(["/", "/react", "/index.html", "/auth.html", "/seats.html", "/bookings.html"], (req, res, next) => {
+  res.sendFile(path.join(frontendDir, "index.html"), (error) => {
+    if (!error) return;
+    if (error.code === "ENOENT") return res.status(503).send("Run npm run build:react to build SeatLock.");
+    next(error);
+  });
+});
 
 const USERS_FILE = path.join(__dirname, "users.json");
 const BOOKINGS_FILE = path.join(__dirname, "bookings.json");

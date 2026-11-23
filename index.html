@@ -7,6 +7,7 @@
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="stylesheet" href="./css/base.css" />
     <link rel="stylesheet" href="./css/site.css" />
+    <link rel="stylesheet" href="./css/discover.css" />
     <title>SeatLock - Live Events</title>
   </head>
   <body>
@@ -41,20 +42,20 @@
             <p>Find the nights, sounds, and stories that stay with you long after the lights come up. Unlock unforgettable moments with SeatLock.</p>
             <div class="hero-cta-group">
               <a href="#events" class="hero-button">Discover events <span class="icon-arrow" aria-hidden="true">&#8594;</span></a>
-              <a href="./auth.html?mode=signup" class="hero-button-secondary">Get Started <span aria-hidden="true">&#8594;</span></a>
+              <a href="#categories" class="hero-button-secondary">Browse categories <span aria-hidden="true">&#8594;</span></a>
             </div>
             <div class="hero-stats">
               <div class="stat-item">
-                <span class="stat-number">500+</span>
-                <span class="stat-label">Events</span>
+                <span class="stat-number" id="catalog-events">—</span>
+                <span class="stat-label">Listed events</span>
               </div>
               <div class="stat-item">
-                <span class="stat-number">50K+</span>
-                <span class="stat-label">Attendees</span>
+                <span class="stat-number" id="catalog-cities">—</span>
+                <span class="stat-label">Cities</span>
               </div>
               <div class="stat-item">
-                <span class="stat-number">100+</span>
-                <span class="stat-label">Venues</span>
+                <span class="stat-number" id="catalog-categories">—</span>
+                <span class="stat-label">Categories</span>
               </div>
             </div>
             <div class="hero-note" aria-label="Curated culture, music, and experiences">
@@ -88,7 +89,8 @@
             </label>
           </div>
 
-          <div class="event-grid" id="event-grid" aria-live="polite"></div>
+          <p class="event-results" id="event-results" role="status"></p>
+          <div class="event-grid" id="event-grid"></div>
           <div class="empty-state" id="empty-state" role="status" hidden>
             <h3>No events found</h3>
             <p>Try a different search or browse all event categories.</p>

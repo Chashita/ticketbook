@@ -1,5 +1,4 @@
-body { margin: 0; background: #10100f; color: #f2efe8; font-family: system-ui, sans-serif; }
-.seat-page { max-width: 1200px; margin: 0 auto; padding: 24px; }
+.seat-page { max-width: 1200px; margin: 0 auto; padding: 24px; color: #f2efe8; font-family: system-ui, sans-serif; }
 .seat-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
 .seat-topbar a { color: #f2efe8; text-decoration: none; opacity: .8; }
 .who { opacity: .8; font-size: .9rem; }
@@ -8,8 +7,8 @@ body { margin: 0; background: #10100f; color: #f2efe8; font-family: system-ui, s
 .seat-layout { display: grid; grid-template-columns: 1fr 360px; gap: 28px; }
 @media (max-width: 900px) { .seat-layout { grid-template-columns: 1fr; } }
 
-h1 { font-size: 2.4rem; margin: 0 0 8px; }
-h1 em { color: #e8b84a; font-style: italic; }
+.seat-page h1 { font-size: 2.4rem; margin: 0 0 8px; }
+.seat-page h1 em { color: #e8b84a; font-style: italic; }
 .hint, .small { opacity: .7; font-size: .9rem; }
 
 .stage { margin: 28px auto 20px; width: 70%; text-align: center; padding: 10px;
