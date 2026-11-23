@@ -127,6 +127,82 @@
   margin: 0 0 12px;
 }
 
+.edition-footer {
+  padding: clamp(28px, 6vw, 80px);
+  border-top: 1px solid #f0b77d50;
+  background: #1a1511;
+}
+
+.edition-footer-heading,
+.edition-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.edition-footer-heading {
+  align-items: end;
+  border-bottom: 1px solid #ffffff26;
+  padding-bottom: 22px;
+}
+
+.edition-footer-heading h2 {
+  font: 500 clamp(28px, 4vw, 48px)/1.1 "Playfair Display", Georgia, serif;
+  margin: 8px 0 0;
+}
+
+.edition-footer-top {
+  justify-self: end;
+}
+
+.edition-footer-grid {
+  padding-block: 24px;
+}
+
+.edition-footer-categories {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.edition-footer :is(a, summary) {
+  min-height: 44px;
+  padding-block: 10px;
+  color: #f0c492;
+}
+
+.edition-footer :is(a, summary):hover {
+  text-decoration: underline;
+}
+
+.edition-footer details {
+  border-bottom: 1px solid #ffffff26;
+}
+
+.edition-footer summary {
+  cursor: pointer;
+}
+
+.edition-footer details p,
+.edition-footer-note {
+  color: #c8b9aa;
+}
+
+.edition-footer details[open] p {
+  animation: discover-enter 200ms ease-out;
+}
+
+@media (max-width: 640px) {
+  .edition-footer-heading,
+  .edition-footer-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .edition-footer-top {
+    justify-self: start;
+  }
+}
+
 @media (max-width: 800px) {
   .discover-edition .hero {
     grid-template-columns: 1fr;

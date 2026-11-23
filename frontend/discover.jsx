@@ -25,7 +25,7 @@ export function Discover({ account, logout }) {
 
   return (
     <div className="website discover-edition">
-      <header className="navbar">
+      <header className="navbar" id="top">
         <a className="logo" href={page()}><span className="logo-mark">S</span><span className="logo-word">Seat<span>Lock</span><i>.</i></span></a>
         <nav className="nav-links" aria-label="Main navigation">
           <a href="#events">Discover Events</a>
@@ -95,6 +95,33 @@ export function Discover({ account, logout }) {
           {!filtered.length && <div className="empty-state"><h3>No events found</h3><button className="text-button" onClick={() => { setQuery(""); setCategory("All Events"); }}>Clear filters</button></div>}
         </section>
       </main>
+      <footer className="edition-footer" aria-labelledby="footer-title">
+        <div className="edition-footer-heading">
+          <div>
+            <span className="section-label">SEATLOCK / AFTER HOURS</span>
+            <h2 id="footer-title">Find your next night out.</h2>
+          </div>
+          <a className="edition-footer-top" href="#top">Back to top <span aria-hidden="true">↑</span></a>
+        </div>
+        <div className="edition-footer-grid">
+          <section aria-labelledby="footer-explore">
+            <h3 id="footer-explore">Explore the listings</h3>
+            <div className="edition-footer-categories">
+              {categories.slice(1).map((item) => (
+                <a key={item} href="#events-title" onClick={() => { setQuery(""); setCategory(item); }}>
+                  {item} <span aria-hidden="true">↗</span>
+                </a>
+              ))}
+            </div>
+          </section>
+          <section aria-labelledby="footer-help">
+            <h3 id="footer-help">Booking help</h3>
+            <details><summary>How do seat holds work?</summary><p>Select a seat to hold it for 60 seconds. Select it again to release it, or confirm before the timer expires.</p></details>
+            <details><summary>Where are my bookings?</summary><p>Sign in and open <a href={page("bookings")}>My Bookings</a> to see your confirmed seats.</p></details>
+          </section>
+        </div>
+        <p className="edition-footer-note">SeatLock demo · No real payments or tickets.</p>
+      </footer>
       <dialog ref={dialog} className="react-event-dialog" aria-labelledby="detail-title">
         {selected && <><form method="dialog"><button className="text-button" aria-label="Close event details">Close ×</button></form><h2 id="detail-title">{selected.title}</h2><p>{selected.date} · {selected.time}</p><p>{selected.venue} · {selected.location}</p><p>{selected.description}</p><a className="hero-button" href={seatsFor(selected)}>Pick seats · from {selected.price} →</a></>}
       </dialog>
