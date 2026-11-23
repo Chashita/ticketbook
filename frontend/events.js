@@ -95,4 +95,36 @@ export const events = [
     tag: "ON STAGE",
     description: "A close-up theatre evening told through monologues, music, and stories gathered from the city.",
   },
+  {
+    title: "City Lights Jazz Club", category: "Jazz", location: "Chennai, India",
+    venue: "The Music Academy", date: "23 Jan 2027", time: "7:30 PM", price: "₹899",
+    image: "photo-1514525253161-7a46d19cd819", tag: "LIVE JAZZ",
+    description: "An evening of improvised sets and modern jazz.",
+  },
+  {
+    title: "Courtside Saturday", category: "Sports", location: "Pune, India",
+    venue: "Balewadi Sports Complex", date: "30 Jan 2027", time: "5:00 PM", price: "₹599",
+    image: "photo-1546519638-68e109498ffc", tag: "BASKETBALL",
+    description: "A showcase match featuring local basketball teams.",
+  },
+  {
+    title: "Print & Paper Lab", category: "Workshops", location: "Kolkata, India",
+    venue: "Tram Arts Studio", date: "06 Feb 2027", time: "11:00 AM", price: "₹1,299",
+    image: "photo-1455390582262-044cdead277a", tag: "HANDS ON",
+    description: "Learn simple printmaking techniques and take home your own edition.",
+  },
 ];
+
+export function eventSlug(event) {
+  return event.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+export function seatPrice(eventId) {
+  if (eventId === "demo") return 500;
+  const event = events.find((item) => eventSlug(item) === eventId);
+  return event ? Number(event.price.replace(/[^0-9]/g, "")) : null;
+}
+
+export function formatINR(amount) {
+  return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(amount);
+}

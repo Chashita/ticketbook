@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { page } from "./navigation";
+import { formatINR, seatPrice } from "./events";
 
 function tabIdentity(accountId) {
   const key = `seatlock-tab-${accountId}`;
@@ -20,6 +21,7 @@ export function Seats({ account, params }) {
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState("");
   const [confirmed, setConfirmed] = useState(false);
+  const [testOutcome, setTestOutcome] = useState("approved");
   const [logs, setLogs] = useState([]);
 
   useEffect(() => {
@@ -92,6 +94,7 @@ export function Seats({ account, params }) {
   const holds = Object.entries(map?.seats || {}).filter(([, seat]) => seat.status === "held" && seat.heldBy === userId && seat.holdExpiresAt > now);
   const seconds = holds.length ? Math.ceil((Math.min(...holds.map(([, seat]) => seat.holdExpiresAt)) - now) / 1000) : 0;
   const unavailable = pending || !connected || Boolean(loadError);
+  const price = seatPrice(eventId);
   const labels = { available: "Available", mine: "Held by you", held: "Held by someone else", booked: "Booked" };
 
   return (
@@ -123,10 +126,18 @@ export function Seats({ account, params }) {
             <h2>Your holds</h2>
             <ul className="my-holds">{holds.map(([id]) => <li key={id}>{id}</li>)}</ul>
             <p className="timer">{seconds ? `Hold expires in ${seconds}s` : "No active holds"}</p>
-            <button className="btn primary" disabled={unavailable || !seconds} onClick={() => action("/book", { accountId: Number(account.id), eventTitle: title }, (data) => {
+            <p>{price === null ? "No test pricing available" : `${holds.length} × ${formatINR(price)} · Total ${formatINR(price * holds.length)}`}</p>
+            <p className="hint">Sandbox checkout. No real money is charged.</p>
+            <label className="sandbox-outcome">Test result
+              <select value={testOutcome} onChange={(event) => setTestOutcome(event.target.value)}>
+                <option value="approved">Approve payment</option>
+                <option value="declined">Decline payment</option>
+              </select>
+            </label>
+            <button className="btn primary" disabled={unavailable || !seconds || price === null} onClick={() => action("/book", { accountId: Number(account.id), testOutcome }, (data) => {
               setConfirmed(true);
-              return `Booked: ${data.seats.join(", ")} (mock payment)`;
-            })}>Confirm &amp; pay (mock)</button>
+              return `Test order ${data.booking.id} confirmed · ${formatINR(data.booking.payment.amount)}`;
+            })}>Place test order</button>
             <p className="msg" role="status">{message}</p>
             {confirmed && <a className="experience-link" href={page("bookings")}>View my bookings →</a>}
           </section>

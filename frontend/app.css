@@ -53,6 +53,18 @@
   width: clamp(20px, 6vw, 44px);
 }
 
+.sandbox-outcome {
+  display: grid;
+  gap: 6px;
+  margin-block: 12px;
+}
+
+.sandbox-outcome select {
+  padding: 8px;
+  color: inherit;
+  background: #10100f;
+}
+
 .discover-edition {
   --discover-accent: #f0b77d;
 }

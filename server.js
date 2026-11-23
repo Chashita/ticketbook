@@ -353,14 +353,25 @@ app.post("/api/events/:eventId/seats/:seatId/release", (req, res) => {
 });
 
 // Mock payment: turns this user's still-valid holds into bookings.
-app.post("/api/events/:eventId/book", (req, res) => {
+app.post("/api/events/:eventId/book", async (req, res) => {
   const { eventId } = req.params;
-  const { userId, eventTitle } = req.body;
+  const { userId, testOutcome } = req.body;
   const accountId = Number(req.body.accountId);
   if (!Number.isSafeInteger(accountId) || accountId <= 0) {
     return res.status(400).json({ success: false, error: "A valid account ID is required." });
   }
 
+  let catalog;
+  try {
+    catalog = await import("./frontend/events.js");
+  } catch (error) {
+    return res.status(500).json({ success: false, error: "Event catalog unavailable." });
+  }
+  const price = catalog.seatPrice(eventId);
+  if (price === null) return res.status(404).json({ success: false, error: "Event not found." });
+  if (testOutcome !== "approved" && testOutcome !== "declined") {
+    return res.status(400).json({ success: false, error: "Choose a sandbox payment result." });
+  }
   const seats = getSeats(eventId);
   const now = Date.now();
 
@@ -373,14 +384,19 @@ app.post("/api/events/:eventId/book", (req, res) => {
     return res.status(409).json({ success: false, error: "Your hold expired. Please pick seats again." });
   }
 
+  if (testOutcome === "declined") {
+    return res.status(402).json({ success: false, error: "Test payment declined. Your holds are still active until they expire." });
+  }
+
   const booking = {
     id: `${accountId}-${now}`,
     accountId,
     eventId,
-    eventTitle: typeof eventTitle === "string" && eventTitle.trim() ? eventTitle.trim().slice(0, 200) : eventId,
+    eventTitle: catalog.events.find((event) => catalog.eventSlug(event) === eventId)?.title || "Demo seat map",
     seats: mine,
     bookedAt: new Date(now).toISOString(),
     status: "Confirmed",
+    payment: { mode: "sandbox", status: "approved", currency: "INR", amount: price * mine.length },
   };
   try {
     const bookings = readBookings();

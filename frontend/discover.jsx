@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { events } from "./events";
+import { events, eventSlug } from "./events";
 import { page } from "./navigation";
 
 const categories = ["All Events", ...new Set(events.map((event) => event.category))];
@@ -8,7 +8,7 @@ const featured = events.find((event) => event.tag === "FESTIVAL") || events[0];
 
 function seatsFor(event) {
   return page("seats", {
-    event: event.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
+    event: eventSlug(event),
     title: event.title,
   });
 }

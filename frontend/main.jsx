@@ -11,6 +11,7 @@ import { Discover } from "./discover";
 import { Account } from "./account";
 import { Seats } from "./seats";
 import { page, signIn } from "./navigation";
+import { formatINR } from "./events";
 
 function readAccount() {
   try {
@@ -32,6 +33,7 @@ function BookingCard({ booking }) {
       </div>
       <div className="booking-meta">
         <span className="booking-status">{booking.status || "Confirmed"}</span>
+        {booking.payment?.mode === "sandbox" && <p>Test payment · {formatINR(booking.payment.amount)}</p>}
         <p>{Number.isNaN(bookedAt.getTime()) ? "Date unavailable" : bookedAt.toLocaleString()}</p>
       </div>
     </article>
