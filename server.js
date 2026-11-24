@@ -2,6 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
+const { installPostgresBooking } = require("./postgres-booking");
+
+if (fs.existsSync(path.join(__dirname, ".env"))) require("node:process").loadEnvFile(path.join(__dirname, ".env"));
 
 const app = express();
 const PORT = 5000;
@@ -200,15 +203,15 @@ app.get("/api/users/:id", (req, res) => {
   res.json({ success: true, user: safeUser });
 });
 
-app.get("/api/users/:id/bookings", (req, res) => {
+app.get("/api/users/:id/bookings", async (req, res) => {
   const accountId = Number(req.params.id);
   if (!Number.isSafeInteger(accountId) || accountId <= 0) {
     return res.status(400).json({ success: false, error: "Invalid user ID." });
   }
 
   try {
-    const bookings = readBookings()
-      .filter((booking) => booking.accountId === accountId)
+    const stored = postgresBooking ? await postgresBooking.history(accountId) : [];
+    const bookings = [...stored, ...readBookings().filter((booking) => booking.accountId === accountId)]
       .sort((a, b) => Date.parse(b.bookedAt) - Date.parse(a.bookedAt));
     res.json({ success: true, bookings });
   } catch (err) {
@@ -317,6 +320,10 @@ async function holdNaive(eventId, seatId, userId) {
 }
 
 // ---------- routes ----------
+const postgresBooking = process.env.DATABASE_URL
+  ? installPostgresBooking(app, { broadcast, rows: ROWS, cols: COLS, holdMs: HOLD_MS })
+  : null;
+
 app.get("/api/events/:eventId/seats", (req, res) => {
   res.json({
     success: true,
@@ -481,6 +488,14 @@ setInterval(() => {
   }
 }, 1000);
 
-app.listen(PORT, () => {
-  console.log(`SeatLock backend running at http://localhost:${PORT}`);
+async function start() {
+  if (postgresBooking) await postgresBooking.start();
+  app.listen(PORT, () => {
+    console.log(`SeatLock backend running at http://localhost:${PORT} (${postgresBooking ? "PostgreSQL" : "local demo"} storage)`);
+  });
+}
+
+start().catch((error) => {
+  console.error("SeatLock startup failed:", error.code || error.name);
+  process.exit(1);
 });

@@ -10,7 +10,14 @@ SeatLock is a React frontend built with Vite and an Express backend. React rende
 
 For frontend development, keep Express running and run `npm run dev:react` in another terminal. Open the Vite URL ending in `/react/`. Vite proxies the API to Express.
 
-## Project structure
+## PostgreSQL (local)
+
+Requires Node.js 24 and a PostgreSQL database owned by the `seatlock_app` login.
+Copy `.env.example` to `.env` and replace the password placeholder locally (percent-encode reserved URL characters in the password). Restart with `npm start`; startup applies `db/001-booking.sql`.
+
+For catalog events, new holds and confirmed test orders use PostgreSQL. The built-in race demo stays isolated in memory and uses the legacy JSON file for its bookings. Existing JSON history remains readable but is not imported into PostgreSQL inventory. Accounts still use local JSON and demo authentication; do not expose this server publicly. Without `DATABASE_URL` the app uses the original local demo storage.
+
+## Files
 
 - `frontend/` contains the React screens and event catalog.
 - `css/` contains the shared and screen-specific styles.
