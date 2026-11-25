@@ -13,9 +13,11 @@ For frontend development, keep Express running and run `npm run dev:react` in an
 ## PostgreSQL (local)
 
 Requires Node.js 24 and a PostgreSQL database owned by the `seatlock_app` login.
-Copy `.env.example` to `.env` and replace the password placeholder locally (percent-encode reserved URL characters in the password). Restart with `npm start`; startup applies `db/001-booking.sql`.
+Copy `.env.example` to `.env` and replace the password placeholder locally (percent-encode reserved URL characters in the password). Restart with `npm start`; startup applies the SQL migrations in `db/`.
 
-For catalog events, new holds and confirmed test orders use PostgreSQL. The built-in race demo stays isolated in memory and uses the legacy JSON file for its bookings. Existing JSON history remains readable but is not imported into PostgreSQL inventory. Accounts still use local JSON and demo authentication; do not expose this server publicly. Without `DATABASE_URL` the app uses the original local demo storage.
+PostgreSQL stores logins, catalog seat holds, and confirmed test orders. On first startup against a database, existing accounts in `users.json` are imported with the same IDs and salted password hashes. The file is not changed or used for login afterward. After verifying the import, remove or securely archive that plaintext file. Sign-up and login require `DATABASE_URL`.
+
+The race demo still uses in-memory seats and JSON bookings. Existing JSON history remains readable but is not imported into PostgreSQL inventory. The browser caches the signed-in profile, and booking API authorization is still demo-only; do not expose this server publicly.
 
 ## Files
 
