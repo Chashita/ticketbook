@@ -11,7 +11,9 @@ function seatsFor(event) {
 
 export function Discover({ account, logout, demo = false }) {
   const [category, setCategory] = useState("All Events");
-  const [city, setCity] = useState("");
+  const [city, setCity] = useState(() => new URLSearchParams(location.search).get("city") || "");
+  const [cityQuery, setCityQuery] = useState("");
+  const cityDialog = useRef(null);
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(null);
   const [events, setEvents] = useState(demo ? demoEvents : null);
@@ -26,20 +28,38 @@ export function Discover({ account, logout, demo = false }) {
     return () => controller.abort();
   }, [demo]);
   const listings = events || [];
-  const categories = ["All Events", ...new Set(listings.map((event) => event.category))];
   const cities = new Set(listings.map((event) => event.location));
-  const featured = listings.find((event) => event.tag === "FESTIVAL") || listings[0];
+  const currentCity = cities.has(city) ? city : "";
+  const nearby = listings.filter((event) => !currentCity || event.location === currentCity);
+  const categories = ["All Events", ...new Set(nearby.map((event) => event.category))];
+  const featured = nearby.find((event) => event.tag === "FESTIVAL") || nearby[0];
+  const matchingCities = [...cities].sort().filter((item) => item.toLowerCase().includes(cityQuery.trim().toLowerCase()));
   const dialog = useRef(null);
-  const filtered = listings.filter((event) =>
+  const filtered = nearby.filter((event) =>
     (category === "All Events" || event.category === category) &&
-    (!city || event.location === city) &&
     [event.title, event.location, event.venue, event.category].join(" ").toLowerCase().includes(query.trim().toLowerCase())
   );
+
+  function chooseCity(value) {
+    const url = new URL(location.href);
+    if (value) url.searchParams.set("city", value);
+    else url.searchParams.delete("city");
+    history.replaceState(null, "", url);
+    setCity(value);
+    setCategory("All Events");
+  }
 
   return (
     <div className="website discover-edition">
       <header className="navbar" id="top">
-        <a className="logo" href={page()}><span className="logo-mark">S</span><span className="logo-word">Seat<span>Lock</span><i>.</i></span></a>
+        <div className="edition-header-location">
+          <a className="logo" href={page()}><span className="logo-mark">S</span><span className="logo-word">Seat<span>Lock</span><i>.</i></span></a>
+          <button className="edition-city-trigger" aria-haspopup="dialog" onClick={() => { setCityQuery(""); cityDialog.current.showModal(); }}>
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><path d="M20 10c0 6-8 11-8 11S4 16 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></svg>
+            <span><small>Location</small><strong>{currentCity.split(",")[0] || "All cities"}</strong></span>
+            <span aria-hidden="true">⌄</span>
+          </button>
+        </div>
         <nav className="nav-links" aria-label="Main navigation">
           <a href="#events">Discover Events</a>
           {!demo && <a href={page("list-event")}>List your event</a>}
@@ -79,7 +99,7 @@ export function Discover({ account, logout, demo = false }) {
         </section>
         <section className="events-section" id="events" aria-labelledby="events-title">
           <div className="section-heading">
-            <div><span className="section-label">THE LISTINGS / 01</span><h2 id="events-title">What’s <em>on.</em></h2></div>
+            <div><span className="section-label">DISCOVER EVENTS</span><h2 id="events-title">{currentCity ? <>Events in <em>{currentCity.split(",")[0]}</em></> : <>What’s <em>on.</em></>}</h2></div>
             <p>From small stages to big nights. Find something worth going out for.</p>
           </div>
           <div className="event-toolbar">
@@ -88,13 +108,9 @@ export function Discover({ account, logout, demo = false }) {
             </div>
             <div className="edition-search-controls">
               <label className="search-box"><span aria-hidden="true">⌕</span><input type="search" aria-label="Search events, cities, or venues" placeholder="Search events or venues" value={query} onChange={(event) => setQuery(event.target.value)} /></label>
-              <select aria-label="Filter by city" value={city} onChange={(event) => setCity(event.target.value)}>
-                <option value="">All cities</option>
-                {[...cities].sort().map((item) => <option key={item} value={item}>{item.split(",")[0]}</option>)}
-              </select>
             </div>
           </div>
-          <p className="event-results" role="status">{catalogError || (events ? `Showing ${filtered.length} of ${listings.length} events` : "Loading the event catalog…")}</p>
+          <p className="event-results" role="status">{catalogError || (events ? `Showing ${filtered.length} of ${nearby.length} events` : "Loading the event catalog…")}</p>
           <div className="event-grid">
             {filtered.map((event) => (
               <article className="event-card" key={event.id || event.title}>
@@ -115,7 +131,7 @@ export function Discover({ account, logout, demo = false }) {
               </article>
             ))}
           </div>
-          {events && !filtered.length && <div className="empty-state"><h3>No events found</h3><button className="text-button" onClick={() => { setQuery(""); setCity(""); setCategory("All Events"); }}>Clear filters</button></div>}
+          {events && !filtered.length && <div className="empty-state"><h3>No events found</h3><button className="text-button" onClick={() => { setQuery(""); chooseCity(""); }}>Clear filters</button></div>}
         </section>
         {!demo && <section className="organizer-callout" aria-labelledby="organizer-title">
           <div><span className="section-label">FOR PROMOTERS &amp; VENUES</span><h2 id="organizer-title">Putting on a show?</h2><p>Tell us about your concert, festival, or event and we’ll review it for the SeatLock listings.</p></div>
@@ -135,7 +151,7 @@ export function Discover({ account, logout, demo = false }) {
             <h3 id="footer-explore">Explore the listings</h3>
             <div className="edition-footer-categories">
               {categories.slice(1).map((item) => (
-                <a key={item} href="#events-title" onClick={() => { setQuery(""); setCity(""); setCategory(item); }}>
+                <a key={item} href="#events-title" onClick={() => { setQuery(""); setCategory(item); }}>
                   {item} <span aria-hidden="true">↗</span>
                 </a>
               ))}
@@ -149,6 +165,21 @@ export function Discover({ account, logout, demo = false }) {
         </div>
         <p className="edition-footer-note">SeatLock demo · No real payments or tickets. <a href={page("race")}>Try the booking Race Lab ↗</a>{!demo && <> · <a href={page("admin")}>Admin login ↗</a></>}</p>
       </footer>
+      <dialog ref={cityDialog} className="edition-city-dialog" aria-labelledby="city-dialog-title">
+        <div className="edition-city-heading">
+          <div><span className="section-label">EXPLORE NEAR YOU</span><h2 id="city-dialog-title">Choose your city</h2></div>
+          <form method="dialog"><button className="edition-city-close" aria-label="Close city selection">×</button></form>
+        </div>
+        <input autoFocus type="search" aria-label="Search cities" placeholder="Search for a city" value={cityQuery} onChange={(event) => setCityQuery(event.target.value)} />
+        <div className="edition-city-options">
+          {(!cityQuery.trim() ? ["", ...matchingCities] : matchingCities).map((item) => (
+            <button key={item} aria-pressed={item === currentCity} onClick={() => { chooseCity(item); cityDialog.current.close(); }}>
+              {item.split(",")[0] || "All cities"} {item === currentCity && <span aria-hidden="true">✓</span>}
+            </button>
+          ))}
+          {cityQuery.trim() && !matchingCities.length && <p role="status">No matching cities in the current catalog.</p>}
+        </div>
+      </dialog>
       <dialog ref={dialog} className="react-event-dialog" aria-labelledby="detail-title">
         {selected && <><form method="dialog"><button className="text-button" aria-label="Close event details">Close ×</button></form><h2 id="detail-title">{selected.title}</h2><p>{selected.date} · {selected.time}</p><p>{selected.venue} · {selected.location}</p><p>{selected.description}</p><a className="hero-button" href={seatsFor(selected)}>Pick seats · from {selected.price} →</a></>}
       </dialog>
