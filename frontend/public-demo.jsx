@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Discover } from "./discover";
 import { events, eventSlug, formatINR, seatPrice } from "./events";
 import { page } from "./navigation";
+import { RaceLab } from "./race-lab";
 
 const storageKey = "seatlock-public-demo-orders";
 const rows = ["A", "B", "C", "D", "E", "F"];
@@ -49,6 +50,7 @@ export function PublicDemo() {
     setMessage(`Test booking confirmed: ${order.seats.join(", ")}.`);
   }
 
+  if (screen === "race") return <RaceLab />;
   if (screen === "bookings") {
     return (
       <main className="bookings-page">

@@ -101,7 +101,7 @@ export function Seats({ account, params }) {
 
   return (
     <main className="seat-page">
-      <header className="seat-topbar"><a href={page()}>← Back to events</a><span className="who">Signed in as <strong>{account.fullName}</strong></span></header>
+      <header className="seat-topbar"><a href={page()}>← Back to events</a><a href={page("race")}>Race Lab ↗</a><span className="who">Signed in as <strong>{account.fullName}</strong></span></header>
       <div className="seat-layout">
         <section>
           <h1>Pick your <em>seats.</em></h1>

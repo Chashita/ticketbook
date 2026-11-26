@@ -31,6 +31,7 @@ export function Discover({ account, logout, demo = false }) {
           <a href="#events">Discover Events</a>
           <a href="#categories">Categories</a>
           <a href={page("bookings")}>My Bookings</a>
+          <a href={page("race")}>Race Lab</a>
           {demo && <a href={page("seats")}>Seat Map</a>}
         </nav>
         <div className="nav-account-actions">
@@ -120,7 +121,7 @@ export function Discover({ account, logout, demo = false }) {
             <details><summary>Where are my bookings?</summary><p>{demo ? "Open " : "Sign in and open "}<a href={page("bookings")}>My Bookings</a> to see your confirmed seats{demo ? " on this browser" : ""}.</p></details>
           </section>
         </div>
-        <p className="edition-footer-note">SeatLock demo · No real payments or tickets.</p>
+        <p className="edition-footer-note">SeatLock demo · No real payments or tickets. <a href={page("race")}>Try the booking Race Lab ↗</a></p>
       </footer>
       <dialog ref={dialog} className="react-event-dialog" aria-labelledby="detail-title">
         {selected && <><form method="dialog"><button className="text-button" aria-label="Close event details">Close ×</button></form><h2 id="detail-title">{selected.title}</h2><p>{selected.date} · {selected.time}</p><p>{selected.venue} · {selected.location}</p><p>{selected.description}</p><a className="hero-button" href={seatsFor(selected)}>Pick seats · from {selected.price} →</a></>}

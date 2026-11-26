@@ -13,6 +13,7 @@ import { Seats } from "./seats";
 import { page, signIn } from "./navigation";
 import { formatINR } from "./events";
 import { PublicDemo } from "./public-demo";
+import { RaceLab } from "./race-lab";
 
 function BookingCard({ booking }) {
   const bookedAt = new Date(booking.bookedAt);
@@ -119,13 +120,14 @@ function App() {
 
   useEffect(() => {
     if (needsSignIn) location.replace(signIn());
-    const titles = { discover: "Live Events", account: "Your Account", seats: "Pick Seats", bookings: "My Bookings" };
+    const titles = { discover: "Live Events", account: "Your Account", seats: "Pick Seats", bookings: "My Bookings", race: "Race Lab" };
     document.title = `SeatLock — ${titles[screen] || titles.discover}`;
   }, [screen, needsSignIn]);
 
   if (needsSignIn) return null;
   if (protectedScreen && account === undefined) return <main className="seat-page" role="status">{sessionError || "Checking your login…"}</main>;
   if (screen === "account") return <Account params={params} />;
+  if (screen === "race") return <RaceLab />;
   if (screen === "seats") return <Seats account={account} params={params} />;
   if (screen === "bookings") return <BookingsPage account={account} />;
   return <Discover account={account} logout={async () => {

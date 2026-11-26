@@ -65,6 +65,62 @@
   background: #10100f;
 }
 
+.race-lab {
+  max-width: 850px;
+}
+
+.race-controls {
+  display: grid;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.race-controls input {
+  width: min(100%, 240px);
+  padding: 10px;
+  border: 1px solid #ffffff50;
+  border-radius: 6px;
+  background: #10100f;
+  color: inherit;
+}
+
+.race-presets,
+.race-lab-results {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.race-presets .btn {
+  width: auto;
+  margin: 0;
+}
+
+.race-presets .btn[aria-pressed="true"] {
+  border-color: #e8b84a;
+  color: #e8b84a;
+}
+
+.race-progress {
+  min-height: 3em;
+}
+
+.race-lab-results .card {
+  flex: 1 1 240px;
+}
+
+.race-metric {
+  color: #e8b84a;
+  font-size: clamp(20px, 5vw, 32px);
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .race-lab-results {
+    animation: discover-enter 240ms ease-out;
+  }
+}
+
 .discover-edition {
   --discover-accent: #f0b77d;
 }
