@@ -12,6 +12,7 @@ import { Account } from "./account";
 import { Seats } from "./seats";
 import { page, signIn } from "./navigation";
 import { formatINR } from "./events";
+import { PublicDemo } from "./public-demo";
 
 function readAccount() {
   try {
@@ -127,4 +128,4 @@ function App() {
   }} />;
 }
 
-createRoot(document.getElementById("root")).render(<App />);
+createRoot(document.getElementById("root")).render(import.meta.env.MODE === "pages" ? <PublicDemo /> : <App />);

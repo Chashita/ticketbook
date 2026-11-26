@@ -7,7 +7,8 @@
     "start": "node server.js",
     "dev": "node server.js",
     "dev:react": "vite",
-    "build:react": "vite build"
+    "build:react": "vite build",
+    "build:pages": "vite build --mode pages"
   },
   "dependencies": {
     "cors": "^2.8.6",

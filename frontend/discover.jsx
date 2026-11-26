@@ -13,7 +13,7 @@ function seatsFor(event) {
   });
 }
 
-export function Discover({ account, logout }) {
+export function Discover({ account, logout, demo = false }) {
   const [category, setCategory] = useState("All Events");
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(null);
@@ -34,7 +34,7 @@ export function Discover({ account, logout }) {
           <a href={page("seats")}>Seat Map</a>
         </nav>
         <div className="nav-account-actions">
-          {account ? <><span>{account.fullName}</span><button className="nav-button" onClick={logout}>Sign out</button></> : (
+          {demo ? <span className="section-label">PUBLIC DEMO</span> : account ? <><span>{account.fullName}</span><button className="nav-button" onClick={logout}>Sign out</button></> : (
             <><a className="nav-signup" href={page("account", { mode: "signup" })}>Sign up</a><a className="nav-button" href={page("account")}>Sign in →</a></>
           )}
         </div>
@@ -116,8 +116,8 @@ export function Discover({ account, logout }) {
           </section>
           <section aria-labelledby="footer-help">
             <h3 id="footer-help">Booking help</h3>
-            <details><summary>How do seat holds work?</summary><p>Select a seat to hold it for 60 seconds. Select it again to release it, or confirm before the timer expires.</p></details>
-            <details><summary>Where are my bookings?</summary><p>Sign in and open <a href={page("bookings")}>My Bookings</a> to see your confirmed seats.</p></details>
+            <details><summary>How does seat selection work?</summary><p>{demo ? "Select seats to try checkout. Demo selections are not shared with other visitors." : "Select a seat to hold it for 60 seconds. Select it again to release it, or confirm before the timer expires."}</p></details>
+            <details><summary>Where are my bookings?</summary><p>{demo ? "Open " : "Sign in and open "}<a href={page("bookings")}>My Bookings</a> to see your confirmed seats{demo ? " on this browser" : ""}.</p></details>
           </section>
         </div>
         <p className="edition-footer-note">SeatLock demo · No real payments or tickets.</p>

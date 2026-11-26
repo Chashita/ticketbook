@@ -1,9 +1,9 @@
 import { defineConfig } from "vite";
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   root: "frontend",
-  base: "/react/",
-  build: { outDir: "../dist", emptyOutDir: true },
+  base: mode === "pages" ? "./" : "/react/",
+  build: { outDir: mode === "pages" ? "../dist-pages" : "../dist", emptyOutDir: true },
   server: {
     fs: { deny: [".env", ".env.*", "*.{crt,pem}", "**/.git/**", "**/users.json", "**/bookings.json"] },
     proxy: {
@@ -11,4 +11,4 @@ export default defineConfig({
       "/favicon.svg": "http://localhost:5000",
     },
   },
-});
+}));
