@@ -69,6 +69,88 @@
   max-width: 850px;
 }
 
+.organizer-callout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  margin: 0 clamp(14px, 6vw, 100px) clamp(30px, 7vw, 90px);
+  padding: clamp(22px, 5vw, 62px);
+  border: 1px solid #f0b77d42;
+  background: #1b1511;
+}
+
+.organizer-callout h2,
+.organizer-workspace h1 {
+  font: 500 clamp(32px, 5vw, 58px)/1.1 "Playfair Display", Georgia, serif;
+  margin: 8px 0 16px;
+}
+
+.organizer-callout p,
+.organizer-workspace > p,
+.organizer-record span {
+  color: #c8b9aa;
+}
+
+.organizer-workspace {
+  max-width: 1080px;
+  margin: auto;
+  padding: clamp(20px, 5vw, 54px);
+}
+
+.organizer-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 22px;
+}
+
+.organizer-form {
+  display: grid;
+  gap: 14px;
+  max-width: 640px;
+}
+
+.organizer-form label,
+.organizer-record {
+  display: grid;
+  gap: 8px;
+}
+
+.organizer-form :is(input, textarea) {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ffffff48;
+  background: #13110f;
+  border-radius: 6px;
+  color: inherit;
+  font: inherit;
+  color-scheme: dark;
+}
+
+.organizer-record {
+  overflow-wrap: anywhere;
+  border-top: 1px solid #ffffff20;
+  padding-block: 14px;
+}
+
+.organizer-record .btn-row,
+.organizer-record .btn {
+  margin: 0;
+}
+
+.bookings-page .booking-card,
+.seat-page .card:not(.race-controls) {
+  border-color: #f0b77d35;
+  border-radius: 12px;
+}
+
+@media (max-width: 740px) {
+  .organizer-layout { grid-template-columns: minmax(0, 1fr); }
+  .seat-topbar { flex-wrap: wrap; gap: 10px; }
+}
+
 .race-controls {
   display: grid;
   gap: 12px;

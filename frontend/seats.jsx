@@ -96,7 +96,7 @@ export function Seats({ account, params }) {
   const holds = Object.entries(map?.seats || {}).filter(([, seat]) => seat.status === "held" && seat.heldBy === holder && seat.holdExpiresAt > now);
   const seconds = holds.length ? Math.ceil((Math.min(...holds.map(([, seat]) => seat.holdExpiresAt)) - now) / 1000) : 0;
   const unavailable = pending || !connected || Boolean(loadError);
-  const price = seatPrice(eventId);
+  const price = map?.seatPrice ?? seatPrice(eventId);
   const labels = { available: "Available", mine: "Held by you", held: "Held by someone else", booked: "Booked" };
 
   return (
@@ -105,7 +105,7 @@ export function Seats({ account, params }) {
       <div className="seat-layout">
         <section>
           <h1>Pick your <em>seats.</em></h1>
-          <p className="hint">{title} · Click a seat to hold it. Click again to release it.</p>
+          <p className="hint">{map?.eventTitle || title} · Click a seat to hold it. Click again to release it.</p>
           <p role="status">{loadError || (!connected ? "Connecting to live seats…" : !map ? "Loading seats…" : "Live seat map")}</p>
           <div className="stage">STAGE</div>
           <div className="seat-grid">

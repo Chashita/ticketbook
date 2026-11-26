@@ -14,6 +14,7 @@ import { page, signIn } from "./navigation";
 import { formatINR } from "./events";
 import { PublicDemo } from "./public-demo";
 import { RaceLab } from "./race-lab";
+import { AdminEvents, ListingRequest } from "./organizer";
 
 function BookingCard({ booking }) {
   const bookedAt = new Date(booking.bookedAt);
@@ -103,7 +104,7 @@ function App() {
   const params = new URLSearchParams(location.search);
   const legacyScreens = { "/auth.html": "account", "/seats.html": "seats", "/bookings.html": "bookings" };
   const screen = params.get("screen") || legacyScreens[location.pathname] || "discover";
-  const protectedScreen = screen === "seats" || screen === "bookings";
+  const protectedScreen = ["seats", "bookings", "admin"].includes(screen);
   const needsSignIn = protectedScreen && account === null;
 
   useEffect(() => {
@@ -120,7 +121,7 @@ function App() {
 
   useEffect(() => {
     if (needsSignIn) location.replace(signIn());
-    const titles = { discover: "Live Events", account: "Your Account", seats: "Pick Seats", bookings: "My Bookings", race: "Race Lab" };
+    const titles = { discover: "Live Events", account: "Your Account", seats: "Pick Seats", bookings: "My Bookings", race: "Race Lab", admin: "Event Admin", "list-event": "List Your Event" };
     document.title = `SeatLock — ${titles[screen] || titles.discover}`;
   }, [screen, needsSignIn]);
 
@@ -128,6 +129,8 @@ function App() {
   if (protectedScreen && account === undefined) return <main className="seat-page" role="status">{sessionError || "Checking your login…"}</main>;
   if (screen === "account") return <Account params={params} />;
   if (screen === "race") return <RaceLab />;
+  if (screen === "list-event") return <ListingRequest />;
+  if (screen === "admin") return <AdminEvents account={account} />;
   if (screen === "seats") return <Seats account={account} params={params} />;
   if (screen === "bookings") return <BookingsPage account={account} />;
   return <Discover account={account} logout={async () => {

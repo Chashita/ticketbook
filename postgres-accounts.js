@@ -11,6 +11,7 @@ const sessionCookie = "seatlock_session";
 const lifetime = 60 * 60 * 24 * 7;
 const tokenHash = (token) => createHash("sha256").update(token).digest("hex");
 const requestToken = (req) => req.headers.cookie?.match(/(?:^|;\s*)seatlock_session=([a-f0-9]{64})(?:;|$)/)?.[1];
+const isAdmin = (account) => Boolean(account && (process.env.SEATLOCK_ADMIN_IDS || "").split(",").map((id) => id.trim()).includes(String(account.id)));
 
 async function hashPassword(password) {
   const salt = randomBytes(16).toString("hex");
@@ -57,7 +58,7 @@ function installPostgresAccounts(app, usersFile, { hosted = false } = {}) {
   });
 
   app.get("/api/session", authenticate, (req, res) => {
-    res.set("Cache-Control", "no-store").json({ user: req.account });
+    res.set("Cache-Control", "no-store").json({ user: { ...req.account, isAdmin: isAdmin(req.account) } });
   });
   app.post("/api/logout", route(async (req, res) => {
     const token = requestToken(req);
@@ -143,4 +144,4 @@ function installPostgresAccounts(app, usersFile, { hosted = false } = {}) {
   };
 }
 
-module.exports = { installPostgresAccounts };
+module.exports = { installPostgresAccounts, isAdmin };

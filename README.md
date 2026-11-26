@@ -27,6 +27,14 @@ Hosted mode uses fresh accounts, disables the local race/reset endpoint, and doe
 
 To demonstrate contention, create two different accounts on two devices, open the same catalog event at the same Render URL, and click the same available seat. Only one account should hold it. Confirm the winner's mock order and check that the other device sees the seat as booked.
 
+## Organizer requests and event admin
+
+On the Render app, **List your event** submits an inquiry to the private organizer inbox in PostgreSQL. No email is sent automatically. The public GitHub Pages demo uses a separate static catalog and does not accept submissions.
+
+To enable admin access, sign up and log in on Render, open **Admin login** in the footer, and copy your account ID from the access screen. In Render **Environment**, set `SEATLOCK_ADMIN_IDS` to that ID and redeploy. Use comma-separated IDs for multiple trusted accounts. Do not reuse local IDs on Render: each database assigns its own.
+
+Admins can add or edit listings, unlist or restore events without deleting historical bookings, and use organizer inquiries as drafts. The database initially seeds the original catalog. Prices and listing status are checked on the server during booking.
+
 ## PayPal Sandbox (optional)
 
 In your private `.env`, add `PAYPAL_SANDBOX_CLIENT_ID` and `PAYPAL_SANDBOX_SECRET` from the Default Application in **Sandbox** (not Live). Set `PAYPAL_SANDBOX_RETURN_ORIGIN` to the exact origin you open SeatLock on, normally `http://localhost:5000`. Keep the existing `DATABASE_URL`, rebuild the React app, and restart Express.

@@ -3,7 +3,8 @@ const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
 const { installPostgresBooking } = require("./postgres-booking");
-const { installPostgresAccounts } = require("./postgres-accounts");
+const { installPostgresAccounts, isAdmin } = require("./postgres-accounts");
+const { installEvents } = require("./postgres-events");
 
 if (fs.existsSync(path.join(__dirname, ".env"))) require("node:process").loadEnvFile(path.join(__dirname, ".env"));
 
@@ -46,6 +47,7 @@ function writeBookings(bookings) {
 
 const postgresAccounts = installPostgresAccounts(app, USERS_FILE, { hosted });
 const requireAccount = postgresAccounts?.authenticate || ((req, res) => res.status(503).json({ error: "Account storage unavailable." }));
+const eventStore = installEvents(app, requireAccount, isAdmin);
 
 app.get("/api/users/:id/bookings", requireAccount, async (req, res) => {
   const accountId = Number(req.params.id);
@@ -180,7 +182,7 @@ app.use("/api/events/:eventId", (req, res, next) => {
 });
 
 const postgresBooking = process.env.DATABASE_URL
-  ? installPostgresBooking(app, { broadcast, rows: ROWS, cols: COLS, holdMs: HOLD_MS })
+  ? installPostgresBooking(app, { broadcast, rows: ROWS, cols: COLS, holdMs: HOLD_MS, getEvent: eventStore.get })
   : null;
 
 app.get("/api/events/:eventId/seats", (req, res) => {
@@ -349,6 +351,7 @@ setInterval(() => {
 
 async function start() {
   if (postgresAccounts) await postgresAccounts.start();
+  await eventStore.start();
   if (postgresBooking) await postgresBooking.start();
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`SeatLock backend running at http://localhost:${PORT} (${postgresBooking ? "PostgreSQL" : "local demo"} storage)`);

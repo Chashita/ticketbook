@@ -3,11 +3,10 @@ const { readFileSync } = require("node:fs");
 const path = require("node:path");
 const { createPayPalSandbox } = require("./paypal-sandbox");
 
-function installPostgresBooking(app, { broadcast, rows, cols, holdMs }) {
+function installPostgresBooking(app, { broadcast, rows, cols, holdMs, getEvent }) {
   const { Pool } = require("pg");
   const pool = new Pool({ connectionString: process.env.DATABASE_URL, connectionTimeoutMillis: 5000 });
   pool.on("error", (error) => console.error("Idle PostgreSQL connection failed:", error.code || error.name));
-  const catalog = import("./frontend/events.js");
   const paypal = createPayPalSandbox();
   const paypalSeatPrice = 5;
   const seatIds = rows.flatMap((row) => Array.from({ length: cols }, (_, index) => row + (index + 1)));
@@ -30,8 +29,8 @@ function installPostgresBooking(app, { broadcast, rows, cols, holdMs }) {
   };
   const eventRoute = (handler) => wrap(async (req, res) => {
     const { eventId } = req.params;
-    const { seatPrice } = await catalog;
-    if (seatPrice(eventId) === null) return fail(res, 404, "Event not found.");
+    req.listing = await getEvent(eventId);
+    if (!req.listing) return fail(res, 404, "Event not found or no longer listed.");
     if (req.params.seatId && !seatIds.includes(req.params.seatId)) return fail(res, 404, "Seat not found.");
     return handler(req, res);
   });
@@ -45,7 +44,8 @@ function installPostgresBooking(app, { broadcast, rows, cols, holdMs }) {
     );
     const seats = Object.fromEntries(seatIds.map((seatId) => [seatId, snapshot()]));
     for (const row of result.rows) seats[row.seat_id] = snapshot(row);
-    res.json({ success: true, serverNow: Date.now(), holdMs, rows, cols, seats, accountScopedHolds: true, paypalSeatPrice: paypal ? paypalSeatPrice : null });
+    res.json({ success: true, serverNow: Date.now(), holdMs, rows, cols, seats, accountScopedHolds: true, paypalSeatPrice: paypal ? paypalSeatPrice : null,
+      eventTitle: req.listing.title, seatPrice: Number(req.listing.price.replace(/[^0-9]/g, "")) });
   }));
 
   app.post(route + "/seats/:seatId/hold", eventRoute(async (req, res) => {
@@ -123,7 +123,6 @@ function installPostgresBooking(app, { broadcast, rows, cols, holdMs }) {
     if (gateway && !paypal) return fail(res, 503, "PayPal Sandbox is not configured.");
     if (!gateway && !["approved", "declined"].includes(testOutcome)) return fail(res, 400, "Choose a sandbox payment result.");
     if (!gateway && testOutcome === "declined") return fail(res, 402, "Test payment declined. Your holds remain active until they expire.");
-    const { events, eventSlug, seatPrice } = await catalog;
     let id = randomUUID();
     const bookedAt = new Date().toISOString();
     const client = await pool.connect();
@@ -167,8 +166,8 @@ function installPostgresBooking(app, { broadcast, rows, cols, holdMs }) {
       const seats = updated.rows.map((row) => row.seat_id).sort();
       booking = {
         id, accountId, eventId, bookedAt, seats, status: "Confirmed",
-        eventTitle: events.find((event) => eventSlug(event) === eventId).title,
-        payment: { mode: "sandbox", status: "approved", currency: "INR", amount: seatPrice(eventId) * seats.length },
+        eventTitle: req.listing.title,
+        payment: { mode: "sandbox", status: "approved", currency: "INR", amount: Number(req.listing.price.replace(/[^0-9]/g, "")) * seats.length },
       };
       if (checkout) {
         const captureId = await paypal.capture(paypalOrderId, checkout.amount, id);
