@@ -34,6 +34,7 @@ function BookingCard({ booking }) {
       <div className="booking-meta">
         <span className="booking-status">{booking.status || "Confirmed"}</span>
         {booking.payment?.mode === "sandbox" && <p>Test payment · {formatINR(booking.payment.amount)}</p>}
+        {booking.payment?.mode === "paypal-sandbox" && <p>PayPal Sandbox · US$${booking.payment.amount.toFixed(2)}</p>}
         <p>{Number.isNaN(bookedAt.getTime()) ? "Date unavailable" : bookedAt.toLocaleString()}</p>
       </div>
     </article>

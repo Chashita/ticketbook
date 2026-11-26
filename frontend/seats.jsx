@@ -22,6 +22,7 @@ export function Seats({ account, params }) {
   const [message, setMessage] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [testOutcome, setTestOutcome] = useState("approved");
+  const paypalOrderId = params.has("paypalCanceled") ? null : params.get("token");
   const [logs, setLogs] = useState([]);
 
   useEffect(() => {
@@ -138,6 +139,27 @@ export function Seats({ account, params }) {
               setConfirmed(true);
               return `Test order ${data.booking.id} confirmed · ${formatINR(data.booking.payment.amount)}`;
             })}>Place test order</button>
+            {map?.paypalSeatPrice && (
+              <div className="sandbox-outcome">
+                <p className="hint">PayPal Sandbox uses a separate demo price: US${map.paypalSeatPrice} per seat. No real charge.</p>
+                {params.has("paypalCanceled") && <p role="status">PayPal checkout canceled.</p>}
+                {paypalOrderId && !confirmed ? (
+                  <button className="btn ghost" disabled={pending} onClick={() => action("/book", {
+                    accountId: Number(account.id), paypalOrderId,
+                  }, (data) => {
+                    setConfirmed(true);
+                    return `PayPal test order confirmed · US$${data.booking.payment.amount.toFixed(2)}`;
+                  })}>Confirm PayPal test order</button>
+                ) : (
+                  <button className="btn ghost" disabled={unavailable || !seconds} onClick={() => action("/paypal", {
+                    accountId: Number(account.id),
+                  }, (data) => {
+                    location.assign(data.approvalUrl);
+                    return "Opening PayPal Sandbox…";
+                  })}>PayPal Sandbox · US${map.paypalSeatPrice * holds.length}</button>
+                )}
+              </div>
+            )}
             <p className="msg" role="status">{message}</p>
             {confirmed && <a className="experience-link" href={page("bookings")}>View my bookings →</a>}
           </section>

@@ -330,8 +330,8 @@ setInterval(() => {
 }, 1000);
 
 async function start() {
-  if (postgresBooking) await postgresBooking.start();
   if (postgresAccounts) await postgresAccounts.start();
+  if (postgresBooking) await postgresBooking.start();
   app.listen(PORT, () => {
     console.log(`SeatLock backend running at http://localhost:${PORT} (${postgresBooking ? "PostgreSQL" : "local demo"} storage)`);
   });

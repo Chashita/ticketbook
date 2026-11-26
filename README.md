@@ -19,6 +19,14 @@ PostgreSQL stores logins, catalog seat holds, and confirmed test orders. On firs
 
 The race demo still uses in-memory seats and JSON bookings. Existing JSON history remains readable but is not imported into PostgreSQL inventory. The browser caches the signed-in profile, and booking API authorization is still demo-only; do not expose this server publicly.
 
+## PayPal Sandbox (optional)
+
+In your private `.env`, add `PAYPAL_SANDBOX_CLIENT_ID` and `PAYPAL_SANDBOX_SECRET` from the Default Application in **Sandbox** (not Live). Set `PAYPAL_SANDBOX_RETURN_ORIGIN` to the exact origin you open SeatLock on, normally `http://localhost:5000`. Keep the existing `DATABASE_URL`, rebuild the React app, and restart Express.
+
+Sign in to SeatLock, pick a catalog event, hold a seat, and select **PayPal Sandbox**. Use a **sandbox personal buyer account** to approve payment. Return in the same browser tab and click **Confirm PayPal test order**. Checkout uses a clearly separate USD 5-per-seat demo price, and no real money moves. The original INR mock checkout is still available offline.
+
+This is not production payments: the app does not reconcile captures after crashes or seat expiry and does not use webhooks or production-grade session authorization. The PayPal API host is hardcoded to Sandbox.
+
 ## Files
 
 - `frontend/` contains the React screens and event catalog.
