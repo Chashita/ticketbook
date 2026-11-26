@@ -7,6 +7,7 @@ import "../css/discover.css";
 import "../css/auth.css";
 import "../css/seats.css";
 import "./app.css";
+import "./edition.css";
 import { Discover } from "./discover";
 import { Account } from "./account";
 import { Seats } from "./seats";

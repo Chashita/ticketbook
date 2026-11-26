@@ -1,0 +1,271 @@
+:root {
+  --paper: #f7f4ed;
+  --surface: #fffdf8;
+  --ink: #231e19;
+  --muted-ink: #655b52;
+  --line: #ddd3c4;
+  --signal: #a9381f;
+  --signal-dark: #802917;
+  --night: #221b18;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+html,
+body,
+.website,
+.auth-page {
+  color: var(--ink);
+  background: var(--paper);
+}
+
+body :is(button, a, input, select, textarea, summary):focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+
+.website.discover-edition {
+  --discover-accent: #ffb08d;
+}
+
+.discover-edition .navbar {
+  max-width: 1500px;
+  min-height: 76px;
+  margin: auto;
+  padding-inline: clamp(18px, 5vw, 72px);
+  border-color: var(--line);
+  color: var(--ink);
+  background: transparent;
+}
+
+.discover-edition .logo-word,
+.discover-edition .logo-word > span,
+.discover-edition .nav-links a,
+.discover-edition .nav-signup,
+.auth-brand,
+.back-home,
+.seat-page .seat-topbar a {
+  color: var(--ink);
+}
+
+.discover-edition .logo-mark {
+  border: 0;
+  border-radius: 8px;
+  background: var(--signal);
+  color: white;
+}
+
+.discover-edition .logo-word i { color: var(--signal); }
+
+.discover-edition .navbar .nav-button,
+.hero-button,
+.btn.primary {
+  border: 1px solid var(--signal);
+  border-radius: 8px;
+  background: var(--signal);
+  color: #fff;
+}
+
+.discover-edition .navbar .nav-button:hover,
+.hero-button:hover,
+.btn.primary:hover:not(:disabled) {
+  border-color: var(--signal-dark);
+  background: var(--signal-dark);
+  color: #fff;
+}
+
+.website.discover-edition .hero {
+  max-width: 1420px;
+  width: calc(100% - clamp(24px, 8vw, 120px));
+  min-height: clamp(500px, 45vw, 628px);
+  margin: 18px auto 0;
+  padding: clamp(24px, 6vw, 82px);
+  border: 0;
+  border-radius: 14px;
+  background: var(--night);
+  color: var(--paper);
+}
+
+.website.discover-edition .hero-image {
+  inset: 0;
+  opacity: .8;
+  background:
+    linear-gradient(90deg, #211715 0%, #211715ce 32%, #21171526 78%),
+    url("https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=1900&q=82") center 55% / cover;
+}
+
+.discover-edition .hero-content > p { color: #f1ded2; }
+.discover-edition .hero .hero-button { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+.discover-edition .hero .hero-button:hover { background: #fff; }
+.discover-edition .hero .hero-button-secondary { border-radius: 8px; }
+.discover-edition .hero .stat-label { color: #ead6c8; }
+.discover-edition .featured-ticket { background: #ffe1cf; border-color: #c34d30; }
+.discover-edition .featured-ticket:hover { background: #fff0e6; }
+
+.discover-edition .events-section {
+  max-width: 1420px;
+  margin: auto;
+  padding: clamp(42px, 7vw, 92px) clamp(16px, 4vw, 50px);
+}
+
+.discover-edition .section-heading h2,
+.discover-edition .event-details h3 {
+  color: var(--ink);
+}
+
+.discover-edition :is(.section-label, .section-heading h2 em) { color: var(--signal); }
+.discover-edition .hero :is(.eyebrow, .stat-number) { color: #ffbf9f; }
+.discover-edition :is(.section-heading > p, .event-results, .edition-venue, .event-location) { color: var(--muted-ink); }
+
+.website.discover-edition .event-toolbar {
+  margin-top: 24px;
+  border-color: var(--line);
+}
+
+.discover-edition .category-button {
+  border-color: var(--line);
+  color: var(--ink);
+  background: transparent;
+}
+
+.discover-edition .category-button:hover { border-color: var(--signal); color: var(--signal-dark); }
+.discover-edition .category-button.active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+.edition-search-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.discover-edition .edition-search-controls .search-box,
+.edition-search-controls select {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.edition-search-controls select { padding-inline: 12px; font: inherit; }
+.discover-edition .search-box input { color: var(--ink); }
+.discover-edition .search-box input::placeholder { color: var(--muted-ink); }
+
+.website.discover-edition .event-card {
+  border-color: var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.website.discover-edition .event-card:hover,
+.website.discover-edition .event-card:focus-within {
+  border-color: #bb8067;
+  box-shadow: 0 12px 30px #40251815;
+}
+
+.discover-edition .event-image-wrap { background: #e6d5c7; height: clamp(170px, 17vw, 255px); }
+.discover-edition .event-image-wrap img { filter: none; }
+.discover-edition .event-meta span:first-child,
+.discover-edition .event-meta span:last-child,
+.discover-edition .event-price { color: var(--signal-dark); }
+.discover-edition .event-footer { border-color: var(--line); }
+.discover-edition .event-action-button { border-color: var(--line); color: var(--ink); }
+.discover-edition .event-action-button:hover { border-color: var(--signal); color: var(--signal-dark); }
+.discover-edition .book-now-button { background: var(--signal); border-color: var(--signal); color: #fff; }
+.discover-edition .book-now-button:hover { background: var(--signal-dark); color: #fff; }
+.discover-edition .empty-state,
+.discover-edition .empty-state .text-button { color: var(--ink); }
+
+.discover-edition .organizer-callout {
+  background: #f1dfd1;
+  border-color: #e0baaa;
+  border-radius: 12px;
+}
+
+.discover-edition .organizer-callout p { color: var(--muted-ink); }
+.discover-edition .edition-footer { color: var(--paper); background: var(--night); }
+.discover-edition .edition-footer .section-label { color: #ffb08d; }
+
+.react-event-dialog,
+.react-auth-panel,
+.organizer-workspace .card,
+.seat-page .card,
+.bookings-page .booking-card,
+.bookings-page .bookings-empty {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.auth-topbar,
+.bookings-topbar { border-color: var(--line); }
+.bookings-topbar { color: var(--muted-ink); }
+.bookings-topbar strong { color: var(--signal-dark); }
+.bookings-page .section-label { color: var(--signal); }
+.bookings-page .booking-card .booking-seats { color: var(--signal-dark) !important; }
+.bookings-page .booking-card p,
+.bookings-page .bookings-empty p { color: var(--muted-ink); }
+.bookings-page .browse-events { background: #f1dfd1; }
+.react-auth-panel h1,
+.bookings-page h1,
+.seat-page h1 { font-family: "Playfair Display", Georgia, serif; }
+.seat-page { color: var(--ink); font-family: inherit; }
+.bookings-page :is(h1, .booking-card h2, .bookings-topbar a),
+.organizer-workspace .seat-topbar a { color: var(--ink); }
+.bookings-page :is(.booking-seats, .bookings-intro, .bookings-status, .booking-meta p),
+.organizer-workspace > p,
+.organizer-record span,
+.seat-page .hint { color: var(--muted-ink); }
+.organizer-record { border-color: var(--line); }
+.seat-page :is(.who strong, h1 em, .timer, .race-metric),
+.bookings-page h1 em,
+.react-auth-panel .section-label,
+.organizer-workspace .section-label,
+.seat-page .section-label { color: var(--signal); }
+.organizer-workspace .msg.error,
+.bookings-page .bookings-status.error { color: var(--signal-dark); }
+.organizer-workspace .msg.success { color: #245b39; }
+.seat-page .msg.error { color: var(--signal-dark); }
+.seat-page .msg.success { color: #245b39; }
+
+.react-auth-form input:not([type="checkbox"]),
+.organizer-form :is(input, textarea),
+.sandbox-outcome select,
+.race-controls input {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: var(--paper);
+  color-scheme: light;
+}
+
+.seat-page .stage { background: #eaddce; color: var(--muted-ink); }
+.seat-page :is(.seat, .dot).available { background: #fff8ee; color: var(--ink); border-color: #a99581; }
+.seat-page .seat.available:hover:not(:disabled) { background: #f1dfd1; }
+.seat-page :is(.seat, .dot).mine,
+.seat-page .my-holds li { background: var(--signal); border-color: var(--signal); color: #fff; }
+.seat-page :is(.seat, .dot).held { background: #f1d6b6; border-color: #b48b5e; color: #54391e; }
+.seat-page :is(.seat, .dot).booked { background: #ded5ca; border-color: #aa9f91; color: #5e5348; }
+.seat-page .race-presets .btn[aria-pressed="true"] { color: var(--signal); border-color: var(--signal); }
+.seat-page .btn.ghost,
+.organizer-workspace .btn.ghost { border-color: var(--line); color: var(--ink); }
+:is(.seat-page, .bookings-page, .react-auth-panel, .organizer-workspace) :is(.experience-link, .browse-events) { color: var(--signal-dark); }
+
+@media (max-width: 800px) {
+  .discover-edition .navbar { display: flex; flex-wrap: wrap; padding-block: 10px; gap: 8px; }
+  .discover-edition .navbar .nav-links {
+    display: flex;
+    order: 3;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 0 16px;
+    border-top: 1px solid var(--line);
+  }
+  .discover-edition .navbar .nav-links a { padding-block: 10px; }
+  .website.discover-edition .hero-image {
+    background:
+      linear-gradient(0deg, #211715 4%, #211715e0 45%, #21171570),
+      url("https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=1000&q=80") center / cover;
+  }
+  .discover-edition .event-image-wrap { height: min(58vw, 300px); }
+}

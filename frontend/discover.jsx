@@ -11,6 +11,7 @@ function seatsFor(event) {
 
 export function Discover({ account, logout, demo = false }) {
   const [category, setCategory] = useState("All Events");
+  const [city, setCity] = useState("");
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(null);
   const [events, setEvents] = useState(demo ? demoEvents : null);
@@ -31,6 +32,7 @@ export function Discover({ account, logout, demo = false }) {
   const dialog = useRef(null);
   const filtered = listings.filter((event) =>
     (category === "All Events" || event.category === category) &&
+    (!city || event.location === city) &&
     [event.title, event.location, event.venue, event.category].join(" ").toLowerCase().includes(query.trim().toLowerCase())
   );
 
@@ -55,9 +57,9 @@ export function Discover({ account, logout, demo = false }) {
         <section className="hero" aria-labelledby="hero-title">
           <div className="hero-image" aria-hidden="true" />
           <div className="hero-content">
-            <div className="eyebrow">THE SEATLOCK EVENT GUIDE</div>
-            <h1 id="hero-title">Out for<br /><span>the night.</span></h1>
-            <p>Find a gig, comedy night, or theatre show. Pick your seats and make a night of it.</p>
+            <div className="eyebrow">THE LIVE EVENTS GUIDE</div>
+            <h1 id="hero-title">Better<br /><span>in person.</span></h1>
+            <p>Find your next gig, comedy night, or theatre show. Then pick exactly where you’ll sit.</p>
             <div className="hero-cta-group">
               <a className="hero-button" href="#events">Discover events →</a>
               <a className="hero-button-secondary" href="#categories">Browse categories →</a>
@@ -69,19 +71,28 @@ export function Discover({ account, logout, demo = false }) {
             </div>
           </div>
           {featured && <a className="featured-ticket" href={seatsFor(featured)}>
-            <span className="featured-label">On the bill / {featured.category}</span>
+            <span className="featured-label">ON THE BILL / {featured.category}</span>
             <strong>{featured.title}</strong>
             <span>{featured.date} · {featured.location.split(",")[0]}</span>
             <span className="featured-arrow" aria-hidden="true">↗</span>
           </a>}
         </section>
         <section className="events-section" id="events" aria-labelledby="events-title">
-          <div className="section-heading"><div><span className="section-label">THE LISTINGS</span><h2 id="events-title">What’s <em>on.</em></h2></div></div>
+          <div className="section-heading">
+            <div><span className="section-label">THE LISTINGS / 01</span><h2 id="events-title">What’s <em>on.</em></h2></div>
+            <p>From small stages to big nights. Find something worth going out for.</p>
+          </div>
           <div className="event-toolbar">
             <div className="categories" id="categories">
               {categories.map((item) => <button key={item} className={`category-button${item === category ? " active" : ""}`} aria-pressed={item === category} onClick={() => setCategory(item)}>{item}</button>)}
             </div>
-            <label className="search-box"><span aria-hidden="true">⌕</span><input type="search" aria-label="Search events, cities, or venues" placeholder="Search events, cities, venues" value={query} onChange={(event) => setQuery(event.target.value)} /></label>
+            <div className="edition-search-controls">
+              <label className="search-box"><span aria-hidden="true">⌕</span><input type="search" aria-label="Search events, cities, or venues" placeholder="Search events or venues" value={query} onChange={(event) => setQuery(event.target.value)} /></label>
+              <select aria-label="Filter by city" value={city} onChange={(event) => setCity(event.target.value)}>
+                <option value="">All cities</option>
+                {[...cities].sort().map((item) => <option key={item} value={item}>{item.split(",")[0]}</option>)}
+              </select>
+            </div>
           </div>
           <p className="event-results" role="status">{catalogError || (events ? `Showing ${filtered.length} of ${listings.length} events` : "Loading the event catalog…")}</p>
           <div className="event-grid">
@@ -104,7 +115,7 @@ export function Discover({ account, logout, demo = false }) {
               </article>
             ))}
           </div>
-          {events && !filtered.length && <div className="empty-state"><h3>No events found</h3><button className="text-button" onClick={() => { setQuery(""); setCategory("All Events"); }}>Clear filters</button></div>}
+          {events && !filtered.length && <div className="empty-state"><h3>No events found</h3><button className="text-button" onClick={() => { setQuery(""); setCity(""); setCategory("All Events"); }}>Clear filters</button></div>}
         </section>
         {!demo && <section className="organizer-callout" aria-labelledby="organizer-title">
           <div><span className="section-label">FOR PROMOTERS &amp; VENUES</span><h2 id="organizer-title">Putting on a show?</h2><p>Tell us about your concert, festival, or event and we’ll review it for the SeatLock listings.</p></div>
@@ -124,7 +135,7 @@ export function Discover({ account, logout, demo = false }) {
             <h3 id="footer-explore">Explore the listings</h3>
             <div className="edition-footer-categories">
               {categories.slice(1).map((item) => (
-                <a key={item} href="#events-title" onClick={() => { setQuery(""); setCategory(item); }}>
+                <a key={item} href="#events-title" onClick={() => { setQuery(""); setCity(""); setCategory(item); }}>
                   {item} <span aria-hidden="true">↗</span>
                 </a>
               ))}
