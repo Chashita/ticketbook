@@ -31,7 +31,7 @@ export function Discover({ account, logout, demo = false }) {
           <a href="#events">Discover Events</a>
           <a href="#categories">Categories</a>
           <a href={page("bookings")}>My Bookings</a>
-          <a href={page("seats")}>Seat Map</a>
+          {demo && <a href={page("seats")}>Seat Map</a>}
         </nav>
         <div className="nav-account-actions">
           {demo ? <span className="section-label">PUBLIC DEMO</span> : account ? <><span>{account.fullName}</span><button className="nav-button" onClick={logout}>Sign out</button></> : (

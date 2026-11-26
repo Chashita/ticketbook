@@ -45,7 +45,7 @@ function installPostgresBooking(app, { broadcast, rows, cols, holdMs }) {
     );
     const seats = Object.fromEntries(seatIds.map((seatId) => [seatId, snapshot()]));
     for (const row of result.rows) seats[row.seat_id] = snapshot(row);
-    res.json({ success: true, serverNow: Date.now(), holdMs, rows, cols, seats, paypalSeatPrice: paypal ? paypalSeatPrice : null });
+    res.json({ success: true, serverNow: Date.now(), holdMs, rows, cols, seats, accountScopedHolds: true, paypalSeatPrice: paypal ? paypalSeatPrice : null });
   }));
 
   app.post(route + "/seats/:seatId/hold", eventRoute(async (req, res) => {

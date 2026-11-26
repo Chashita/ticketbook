@@ -8,9 +8,11 @@ const { installPostgresAccounts } = require("./postgres-accounts");
 if (fs.existsSync(path.join(__dirname, ".env"))) require("node:process").loadEnvFile(path.join(__dirname, ".env"));
 
 const app = express();
-const PORT = 5000;
+const PORT = Number(process.env.PORT || 5000);
+const hosted = process.env.RENDER === "true" || process.env.SEATLOCK_HOSTED === "true";
+if (hosted && !process.env.DATABASE_URL) throw new Error("Hosted SeatLock requires DATABASE_URL.");
 
-app.use(cors());
+if (!hosted) app.use(cors());
 app.use(express.json());
 const frontendDir = path.join(__dirname, "dist");
 app.use("/react/assets", express.static(path.join(frontendDir, "assets")));
@@ -42,13 +44,15 @@ function writeBookings(bookings) {
   fs.writeFileSync(BOOKINGS_FILE, JSON.stringify(bookings, null, 2));
 }
 
-const postgresAccounts = installPostgresAccounts(app, USERS_FILE);
+const postgresAccounts = installPostgresAccounts(app, USERS_FILE, { hosted });
+const requireAccount = postgresAccounts?.authenticate || ((req, res) => res.status(503).json({ error: "Account storage unavailable." }));
 
-app.get("/api/users/:id/bookings", async (req, res) => {
+app.get("/api/users/:id/bookings", requireAccount, async (req, res) => {
   const accountId = Number(req.params.id);
   if (!Number.isSafeInteger(accountId) || accountId <= 0) {
     return res.status(400).json({ success: false, error: "Invalid user ID." });
   }
+  if (req.account.id !== accountId) return res.status(403).json({ success: false, error: "That booking history is private." });
 
   try {
     const stored = postgresBooking ? await postgresBooking.history(accountId) : [];
@@ -161,6 +165,20 @@ async function holdNaive(eventId, seatId, userId) {
 }
 
 // ---------- routes ----------
+app.use("/api/events/:eventId", (req, res, next) => {
+  if (hosted && req.params.eventId === "demo") return res.status(404).json({ error: "Use a catalog event for the live demo." });
+  if (req.method !== "POST" || !postgresAccounts || req.params.eventId === "demo") return next();
+  return requireAccount(req, res, () => {
+    const tab = req.body?.userId;
+    if (typeof tab !== "string" || !/^[a-zA-Z0-9-]{1,64}$/.test(tab)) {
+      return res.status(400).json({ error: "Invalid tab ID." });
+    }
+    req.body.userId = `${req.account.id}:${tab}`;
+    req.body.accountId = req.account.id;
+    next();
+  });
+});
+
 const postgresBooking = process.env.DATABASE_URL
   ? installPostgresBooking(app, { broadcast, rows: ROWS, cols: COLS, holdMs: HOLD_MS })
   : null;
@@ -332,7 +350,7 @@ setInterval(() => {
 async function start() {
   if (postgresAccounts) await postgresAccounts.start();
   if (postgresBooking) await postgresBooking.start();
-  app.listen(PORT, () => {
+  app.listen(PORT, "0.0.0.0", () => {
     console.log(`SeatLock backend running at http://localhost:${PORT} (${postgresBooking ? "PostgreSQL" : "local demo"} storage)`);
   });
 }

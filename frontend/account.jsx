@@ -26,7 +26,6 @@ export function Account({ params }) {
         location.assign(modeUrl("login"));
         return;
       }
-      localStorage.setItem("seatlockUser", JSON.stringify(data.user));
       const destination = new URL(returnTo, location.origin);
       location.assign(destination.origin === location.origin ? destination.href : page());
     } catch (error) {

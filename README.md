@@ -17,7 +17,15 @@ Copy `.env.example` to `.env` and replace the password placeholder locally (perc
 
 PostgreSQL stores logins, catalog seat holds, and confirmed test orders. On first startup against a database, existing accounts in `users.json` are imported with the same IDs and salted password hashes. The file is not changed or used for login afterward. After verifying the import, remove or securely archive that plaintext file. Sign-up and login require `DATABASE_URL`.
 
-The race demo still uses in-memory seats and JSON bookings. Existing JSON history remains readable but is not imported into PostgreSQL inventory. The browser caches the signed-in profile, and booking API authorization is still demo-only; do not expose this server publicly.
+The local race demo still uses in-memory seats and JSON bookings. Existing JSON history remains readable but is not imported into PostgreSQL inventory. The main app uses an HTTP-only session cookie; PostgreSQL stores only the session token hash. Catalog booking actions and booking history require a signed-in account.
+
+## Deploy the school demo on Render
+
+Authorize the `Shadow-rage/SeatLock` repository in Render. Select **New → Blueprint**, choose the repo's `main` branch, and apply `render.yaml`. It provisions a free web service and private PostgreSQL database. Use the web service's HTTPS URL for both login and booking. The static GitHub Pages demo is separate.
+
+Hosted mode uses fresh accounts, disables the local race/reset endpoint, and does not import local users. Leave the PayPal environment variables unset for mock checkout.
+
+To demonstrate contention, create two different accounts on two devices, open the same catalog event at the same Render URL, and click the same available seat. Only one account should hold it. Confirm the winner's mock order and check that the other device sees the seat as booked.
 
 ## PayPal Sandbox (optional)
 

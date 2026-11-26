@@ -14,14 +14,6 @@ import { page, signIn } from "./navigation";
 import { formatINR } from "./events";
 import { PublicDemo } from "./public-demo";
 
-function readAccount() {
-  try {
-    return JSON.parse(localStorage.getItem("seatlockUser"));
-  } catch {
-    return null;
-  }
-}
-
 function BookingCard({ booking }) {
   const bookedAt = new Date(booking.bookedAt);
   return (
@@ -42,8 +34,7 @@ function BookingCard({ booking }) {
   );
 }
 
-function BookingsPage() {
-  const [account] = useState(readAccount);
+function BookingsPage({ account }) {
   const [bookings, setBookings] = useState(null);
   const [error, setError] = useState("");
   const accountId = account?.id;
@@ -106,11 +97,25 @@ function BookingsPage() {
 }
 
 function App() {
-  const [account, setAccount] = useState(readAccount);
+  const [account, setAccount] = useState(undefined);
+  const [sessionError, setSessionError] = useState("");
   const params = new URLSearchParams(location.search);
   const legacyScreens = { "/auth.html": "account", "/seats.html": "seats", "/bookings.html": "bookings" };
   const screen = params.get("screen") || legacyScreens[location.pathname] || "discover";
-  const needsSignIn = screen === "seats" && !account?.id;
+  const protectedScreen = screen === "seats" || screen === "bookings";
+  const needsSignIn = protectedScreen && account === null;
+
+  useEffect(() => {
+    const request = new AbortController();
+    fetch("/api/session", { signal: request.signal }).then(async (response) => {
+      if (response.status === 401) return setAccount(null);
+      if (!response.ok) throw new Error("Could not check your login. Please refresh.");
+      setAccount((await response.json()).user);
+    }).catch((error) => {
+      if (!request.signal.aborted) setSessionError(error.message);
+    });
+    return () => request.abort();
+  }, []);
 
   useEffect(() => {
     if (needsSignIn) location.replace(signIn());
@@ -119,12 +124,18 @@ function App() {
   }, [screen, needsSignIn]);
 
   if (needsSignIn) return null;
+  if (protectedScreen && account === undefined) return <main className="seat-page" role="status">{sessionError || "Checking your login…"}</main>;
   if (screen === "account") return <Account params={params} />;
   if (screen === "seats") return <Seats account={account} params={params} />;
-  if (screen === "bookings") return <BookingsPage />;
-  return <Discover account={account} logout={() => {
-    localStorage.removeItem("seatlockUser");
-    setAccount(null);
+  if (screen === "bookings") return <BookingsPage account={account} />;
+  return <Discover account={account} logout={async () => {
+    try {
+      const response = await fetch("/api/logout", { method: "POST" });
+      if (!response.ok) throw new Error("Sign-out failed. Please try again.");
+      setAccount(null);
+    } catch {
+      window.alert("Sign-out failed. Please try again.");
+    }
   }} />;
 }
 

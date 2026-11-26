@@ -92,7 +92,8 @@ export function Seats({ account, params }) {
   }
 
   const now = clock + (map?.offset || 0);
-  const holds = Object.entries(map?.seats || {}).filter(([, seat]) => seat.status === "held" && seat.heldBy === userId && seat.holdExpiresAt > now);
+  const holder = map?.accountScopedHolds ? `${account.id}:${userId}` : userId;
+  const holds = Object.entries(map?.seats || {}).filter(([, seat]) => seat.status === "held" && seat.heldBy === holder && seat.holdExpiresAt > now);
   const seconds = holds.length ? Math.ceil((Math.min(...holds.map(([, seat]) => seat.holdExpiresAt)) - now) / 1000) : 0;
   const unavailable = pending || !connected || Boolean(loadError);
   const price = seatPrice(eventId);
@@ -114,7 +115,7 @@ export function Seats({ account, params }) {
                 {Array.from({ length: map.cols }, (_, index) => {
                   const id = `${row}${index + 1}`;
                   const seat = map.seats[id];
-                  const status = seat.status === "held" && seat.heldBy === userId ? "mine" : seat.status;
+                  const status = seat.status === "held" && seat.heldBy === holder ? "mine" : seat.status;
                   return <button key={id} className={`seat ${status}`} disabled={unavailable || status === "booked" || status === "held"} aria-label={`${id}: ${labels[status]}`} onClick={() => action(`/seats/${id}/${status === "mine" ? "release" : "hold"}`)}>{index + 1}</button>;
                 })}
               </div>

@@ -9,3 +9,11 @@ CREATE TABLE IF NOT EXISTS seatlock_accounts (
 CREATE TABLE IF NOT EXISTS seatlock_account_imports (
   source text PRIMARY KEY
 );
+
+CREATE TABLE IF NOT EXISTS seatlock_sessions (
+  token_hash text PRIMARY KEY,
+  account_id bigint NOT NULL REFERENCES seatlock_accounts(id) ON DELETE CASCADE,
+  expires_at timestamptz NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS seatlock_sessions_expiry_idx ON seatlock_sessions (expires_at);
